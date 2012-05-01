@@ -1,0 +1,17 @@
+package org.atomium.util;
+
+public interface UpdateQueryBuilder {
+
+	UpdateQueryBuilder value(String field);
+	UpdateQueryBuilder value(String field, Object value);
+
+	UpdateQueryBuilder where(String field, Op op);
+	UpdateQueryBuilder where(String field, Op op, Object value);
+	
+	UpdateQueryBuilder and(String field, Op op);
+	UpdateQueryBuilder and(String field, Op op, Object value);
+	
+	UpdateQueryBuilder or(String field, Op op);
+	UpdateQueryBuilder or(String field, Op op, Object value);
+	
+}
