@@ -1,7 +1,7 @@
-package org.atomium.util.mysql;
+package org.atomium.util.query.mysql;
 
-import org.atomium.util.Op;
-import org.atomium.util.Order;
+import org.atomium.util.query.Op;
+import org.atomium.util.query.Order;
 
 public class MySqlOp {
 

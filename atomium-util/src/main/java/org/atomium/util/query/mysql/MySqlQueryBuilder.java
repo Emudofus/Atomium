@@ -1,10 +1,10 @@
-package org.atomium.util.mysql;
+package org.atomium.util.query.mysql;
 
-import org.atomium.util.DeleteQueryBuilder;
-import org.atomium.util.InsertQueryBuilder;
-import org.atomium.util.QueryBuilder;
-import org.atomium.util.SelectQueryBuilder;
-import org.atomium.util.UpdateQueryBuilder;
+import org.atomium.util.query.DeleteQueryBuilder;
+import org.atomium.util.query.InsertQueryBuilder;
+import org.atomium.util.query.QueryBuilder;
+import org.atomium.util.query.SelectQueryBuilder;
+import org.atomium.util.query.UpdateQueryBuilder;
 
 public class MySqlQueryBuilder implements QueryBuilder {
 

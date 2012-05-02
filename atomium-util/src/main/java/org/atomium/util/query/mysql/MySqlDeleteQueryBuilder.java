@@ -1,7 +1,7 @@
-package org.atomium.util.mysql;
+package org.atomium.util.query.mysql;
 
-import org.atomium.util.DeleteQueryBuilder;
-import org.atomium.util.Op;
+import org.atomium.util.query.DeleteQueryBuilder;
+import org.atomium.util.query.Op;
 
 public class MySqlDeleteQueryBuilder implements DeleteQueryBuilder {
 	

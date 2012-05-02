@@ -1,8 +1,8 @@
-package org.atomium.util.mysql;
+package org.atomium.util.query.mysql;
 
-import org.atomium.util.Op;
-import org.atomium.util.Order;
-import org.atomium.util.SelectQueryBuilder;
+import org.atomium.util.query.Op;
+import org.atomium.util.query.Order;
+import org.atomium.util.query.SelectQueryBuilder;
 
 public class MySqlSelectQueryBuilder implements SelectQueryBuilder {
 	

@@ -1,9 +1,9 @@
-package org.atomium.util.mysql;
+package org.atomium.util.query.mysql;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.atomium.util.InsertQueryBuilder;
+import org.atomium.util.query.InsertQueryBuilder;
 
 public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 	
