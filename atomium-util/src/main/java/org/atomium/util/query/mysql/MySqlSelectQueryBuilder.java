@@ -2,6 +2,7 @@ package org.atomium.util.query.mysql;
 
 import org.atomium.util.query.Op;
 import org.atomium.util.query.Order;
+import org.atomium.util.query.Query;
 import org.atomium.util.query.SelectQueryBuilder;
 
 public class MySqlSelectQueryBuilder implements SelectQueryBuilder {
@@ -87,8 +88,7 @@ public class MySqlSelectQueryBuilder implements SelectQueryBuilder {
 		return this;
 	}
 	
-	@Override
-	public String toString() {
+	public Query toQuery() {
 		StringBuilder s = new StringBuilder();
 		
 		s.append("SELECT ");
@@ -104,8 +104,8 @@ public class MySqlSelectQueryBuilder implements SelectQueryBuilder {
 		}
 		
 		s.append(" FROM `").append(table).append("` ");
-		
-		return s.toString() + sb.toString() + ";";
+
+		return new MySqlQuery(s.toString() + sb.toString() + ";");
 	}
 
 }

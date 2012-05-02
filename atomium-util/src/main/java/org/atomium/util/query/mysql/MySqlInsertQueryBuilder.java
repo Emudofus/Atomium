@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.atomium.util.query.InsertQueryBuilder;
+import org.atomium.util.query.Query;
 
 public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 	
@@ -27,8 +28,7 @@ public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 		return this;
 	}
 	
-	@Override
-	public String toString() {
+	public Query toQuery() {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("INSERT INTO `").append(table).append("`");
@@ -49,8 +49,8 @@ public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 			sb.append('\'').append(value.toString()).append('\'');
 		}
 		sb.append(");");
-		
-		return sb.toString();
+
+		return new MySqlQuery(sb.toString());
 	}
 
 }

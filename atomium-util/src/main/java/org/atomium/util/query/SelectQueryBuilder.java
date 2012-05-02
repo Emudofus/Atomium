@@ -1,6 +1,6 @@
 package org.atomium.util.query;
 
-public interface SelectQueryBuilder {
+public interface SelectQueryBuilder extends QueryBuilder {
 	
 	SelectQueryBuilder where(String field, Op op);
 	SelectQueryBuilder where(String field, Op op, Object value);

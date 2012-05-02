@@ -1,6 +1,7 @@
 package org.atomium.util.query.mysql;
 
 import org.atomium.util.query.Op;
+import org.atomium.util.query.Query;
 import org.atomium.util.query.UpdateQueryBuilder;
 
 public class MySqlUpdateQueryBuilder implements UpdateQueryBuilder {
@@ -85,9 +86,8 @@ public class MySqlUpdateQueryBuilder implements UpdateQueryBuilder {
 		return this;
 	}
 	
-	@Override
-	public String toString() {
-		return "UPDATE `" + table + "` SET " + sb.toString() + ";";
+	public Query toQuery() {
+		return new MySqlQuery("UPDATE `" + table + "` SET " + sb.toString() + ";");
 	}
 
 }

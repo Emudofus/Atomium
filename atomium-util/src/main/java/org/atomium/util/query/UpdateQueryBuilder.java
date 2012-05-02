@@ -1,6 +1,6 @@
 package org.atomium.util.query;
 
-public interface UpdateQueryBuilder {
+public interface UpdateQueryBuilder extends QueryBuilder {
 
 	UpdateQueryBuilder value(String field);
 	UpdateQueryBuilder value(String field, Object value);

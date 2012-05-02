@@ -2,6 +2,7 @@ package org.atomium.util.query.mysql;
 
 import org.atomium.util.query.DeleteQueryBuilder;
 import org.atomium.util.query.Op;
+import org.atomium.util.query.Query;
 
 public class MySqlDeleteQueryBuilder implements DeleteQueryBuilder {
 	
@@ -65,9 +66,8 @@ public class MySqlDeleteQueryBuilder implements DeleteQueryBuilder {
 		return this;
 	}
 	
-	@Override
-	public String toString() {
-		return "DELETE FROM `" + table + "` " + sb.toString() + ";";
+	public Query toQuery() {
+		return new MySqlQuery("DELETE FROM `" + table + "` " + sb.toString() + ";");
 	}
 
 }

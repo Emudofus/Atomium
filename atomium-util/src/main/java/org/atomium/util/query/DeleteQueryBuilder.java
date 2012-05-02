@@ -1,6 +1,6 @@
 package org.atomium.util.query;
 
-public interface DeleteQueryBuilder {
+public interface DeleteQueryBuilder extends QueryBuilder {
 
 	DeleteQueryBuilder where(String field, Op op);
 	DeleteQueryBuilder where(String field, Op op, Object value);
