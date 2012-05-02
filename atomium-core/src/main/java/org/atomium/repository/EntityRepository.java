@@ -3,6 +3,7 @@ package org.atomium.repository;
 import java.util.List;
 
 import org.atomium.Entity;
+import org.atomium.LazyReference;
 import org.atomium.util.Filter;
 
 public interface EntityRepository<PK, T extends Entity<PK>>
@@ -28,5 +29,12 @@ public interface EntityRepository<PK, T extends Entity<PK>>
 	 * @return filtered entities
 	 */
 	List<T> filter(Filter<T> filter);
+	
+	/**
+	 * return a lazy reference
+	 * @param pk entity's id
+	 * @return reference
+	 */
+	LazyReference<PK, T> getLazyReference(PK pk);
 	
 }

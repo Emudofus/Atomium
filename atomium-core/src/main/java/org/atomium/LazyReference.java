@@ -14,6 +14,11 @@ public class LazyReference<PK, T extends Entity<PK>> implements Reference<T> {
 		this.pk = pk;
 		this.repo = repo;
 	}
+	
+	public LazyReference(T entity) {
+		this.pk = entity.id();
+		this.entity = entity;
+	}
 
 	public PK getPk() {
 		return pk;

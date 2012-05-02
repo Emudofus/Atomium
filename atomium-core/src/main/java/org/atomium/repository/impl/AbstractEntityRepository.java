@@ -1,6 +1,7 @@
 package org.atomium.repository.impl;
 
 import org.atomium.EntityManager;
+import org.atomium.LazyReference;
 import org.atomium.PersistableEntity;
 import org.atomium.repository.DeletableEntityRepository;
 import org.atomium.repository.PersistableEntityRepository;
@@ -31,6 +32,10 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 		entity.setId(pkgen.next());
 		Query query = buildPersistQuery(entity);
 		em.execute(query);
+	}
+	
+	public LazyReference<PK,T> getLazyReference(PK pk) {
+		return new LazyReference<PK, T>(pk, this);
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.atomium.repository.impl;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 	
 	protected abstract Query buildLoadQuery(PK pk);
 	protected abstract Query buildSaveQuery(T entity);
-	protected abstract T load(ResultSet result);
+	protected abstract T load(ResultSet result) throws SQLException;
 	
 	protected T find(Query query) {
 		return em.query(query, new Function1<T, ResultSet>() {
