@@ -25,14 +25,18 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 	protected abstract Query buildLoadQuery(PK pk);
 	protected abstract Query buildSaveQuery(T entity);
 	protected abstract T load(ResultSet result);
-
-	@Override
-	public T find(PK pk) {
-		return em.query(buildLoadQuery(pk), new Function1<T, ResultSet>() {
+	
+	protected T find(Query query) {
+		return em.query(query, new Function1<T, ResultSet>() {
 			public T invoke(ResultSet arg1) throws Exception {
 				return load(arg1);
 			}
 		});
+	}
+
+	@Override
+	public T find(PK pk) {
+		return find(buildLoadQuery(pk));
 	}
 
 	@Override
