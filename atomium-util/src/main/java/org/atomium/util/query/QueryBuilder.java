@@ -2,7 +2,6 @@ package org.atomium.util.query;
 
 public interface QueryBuilder {
 
-	SelectQueryBuilder select(String table);
 	SelectQueryBuilder select(String table, String... fields);
 	
 	InsertQueryBuilder insert(String table);

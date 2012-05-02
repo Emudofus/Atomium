@@ -8,10 +8,6 @@ import org.atomium.util.query.UpdateQueryBuilder;
 
 public class MySqlQueryBuilder implements QueryBuilder {
 
-	public SelectQueryBuilder select(String table) {
-		return new MySqlSelectQueryBuilder(table);
-	}
-
 	public SelectQueryBuilder select(String table, String... fields) {
 		return new MySqlSelectQueryBuilder(table, fields);
 	}
