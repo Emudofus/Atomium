@@ -9,4 +9,6 @@ public interface Configuration {
 	String user();
 	String password();
 	
+	int flushDelay();
+	
 }
