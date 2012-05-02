@@ -1,7 +1,6 @@
 package org.atomium;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.atomium.util.Function1;
 import org.atomium.util.query.Query;
