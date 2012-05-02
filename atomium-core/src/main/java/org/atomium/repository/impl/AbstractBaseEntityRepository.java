@@ -2,7 +2,6 @@ package org.atomium.repository.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +84,7 @@ public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
 		return entities.values().iterator();
 	}
 	
-	public Collection<T> filter(Filter<T> filter) {
+	public List<T> filter(Filter<T> filter) {
 		List<T> result = Lists.newArrayList();
 		for (T entity : entities.values()) {
 			try {

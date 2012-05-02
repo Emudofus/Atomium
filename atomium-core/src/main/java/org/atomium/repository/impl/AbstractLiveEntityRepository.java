@@ -1,8 +1,8 @@
 package org.atomium.repository.impl;
 
 import java.sql.ResultSet;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.atomium.Entity;
 import org.atomium.EntityManager;
@@ -45,7 +45,7 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 	}
 
 	@Override
-	public Collection<T> filter(Filter<T> filter) {
+	public List<T> filter(Filter<T> filter) {
 		return null;
 	}
 
