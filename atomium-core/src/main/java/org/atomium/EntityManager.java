@@ -14,6 +14,7 @@ public interface EntityManager {
 	QueryBuilderFactory builder();
 	
 	<T> T query(Query query, Function1<T, ResultSet> function);
+	void executeLater(Query query);
 	void execute(Query query);
 	
 }

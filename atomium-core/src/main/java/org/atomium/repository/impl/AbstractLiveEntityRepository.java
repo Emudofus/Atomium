@@ -44,7 +44,7 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 
 	@Override
 	public int count() {
-		return 0;
+		return -1;
 	}
 
 	@Override

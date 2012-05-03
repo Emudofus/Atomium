@@ -129,8 +129,28 @@ public abstract class AbstractEntityManager implements EntityManager {
 		return result;
 	}
 
-	public void execute(Query query) {
+	public void executeLater(Query query) {
 		queries.add(query);
+	}
+	
+	@Override
+	public void execute(Query query) {
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			
+			statement.execute(query.toString());
+		} catch (Exception e) {
+			unhandledException(e);
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					unhandledException(e);
+				}
+			}
+		}
 	}
 
 }

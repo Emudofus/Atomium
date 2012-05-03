@@ -24,7 +24,7 @@ public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>
 	
 	public void save(T entity) {
 		Query query = buildSaveQuery(entity);
-		em.execute(query);
+		em.executeLater(query);
 	}
 
 }
