@@ -27,6 +27,12 @@ public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 		
 		return this;
 	}
+
+	public InsertQueryBuilder values(String... fields) {
+		for (String field : fields) values.put(field, null);
+		
+		return this;
+	}
 	
 	public Query toQuery() {
 		StringBuilder sb = new StringBuilder();
