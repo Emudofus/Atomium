@@ -72,26 +72,28 @@ public abstract class AbstractEntityManager implements EntityManager {
 		while (run) {
 			try {
 				Thread.sleep(cfg.flushDelay());
-				
+				flush();
 			} catch (InterruptedException e) {
 				log.error("FATAL ERROR");
 			}
 		}
 	}
 	
-	private static <T> Iterable<T> copyAndClear(List<T> list) {
-		Iterable<T> result = new ArrayList<T>(list);
+	private static <T> List<T> copyAndClear(List<T> list) {
+		List<T> result = new ArrayList<T>(list);
 		list.clear();
 		return result;
 	}
 	
-	private void flush() throws SQLException {
+	private void flush() {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			for (Query query : copyAndClear(queries)) {
+			List<Query> copy = copyAndClear(queries);
+			for (Query query : copy) {
 				statement.execute(query.toString());
 			}
+			log.debug("{} queries were been executed", copy.size());
 		} catch (SQLException e) {
 			log.error(e.toString());
 		} finally {
