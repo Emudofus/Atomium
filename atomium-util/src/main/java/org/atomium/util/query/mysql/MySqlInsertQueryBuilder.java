@@ -49,10 +49,14 @@ public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 		
 		sb.append(") VALUES(");
 		first = true;
-		for (Object value : values.values()) {
+		for (Map.Entry<String, Object> entry : values.entrySet()) {
 			if (first) first = false;
 			else sb.append(", ");
-			sb.append('\'').append(value.toString()).append('\'');
+			if (entry.getValue() != null) {
+				sb.append('\'').append(entry.getValue().toString()).append('\'');
+			} else {
+				sb.append("\'#").append(entry.getKey()).append("#\'");
+			}
 		}
 		sb.append(");");
 

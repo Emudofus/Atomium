@@ -26,12 +26,16 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 	public void delete(T entity) {
 		Query query = buildDeleteQuery(entity);
 		em.execute(query);
+		
+		entities.remove(entity.id());
 	}
 
 	public void persist(T entity) {
 		entity.setId(pkgen.next());
 		Query query = buildPersistQuery(entity);
 		em.execute(query);
+		
+		entities.put(entity.id(), entity);
 	}
 	
 	public LazyReference<PK,T> getLazyReference(PK pk) {

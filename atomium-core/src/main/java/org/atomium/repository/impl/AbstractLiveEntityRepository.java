@@ -31,6 +31,7 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 	protected T find(Query query) {
 		return em.query(query, new Function1<T, ResultSet>() {
 			public T invoke(ResultSet arg1) throws Exception {
+				arg1.next();
 				return load(arg1);
 			}
 		});

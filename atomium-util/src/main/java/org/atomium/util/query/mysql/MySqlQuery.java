@@ -11,7 +11,7 @@ public class MySqlQuery implements Query {
 	}
 
 	public void setParameter(String field, Object obj) {
-		query.replace("#" + field + "#", obj.toString());
+		query = query.replace("#" + field + "#", obj.toString());
 	}
 	
 	@Override

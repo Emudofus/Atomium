@@ -48,6 +48,8 @@ public abstract class AbstractEntityManager implements EntityManager {
 					loop();
 				}
 			});
+			
+			log.info("connection successfully opened");
 		} catch (SQLException e) {
 			log.error("can't open connection because : {}", e.getMessage());
 		}
@@ -59,6 +61,8 @@ public abstract class AbstractEntityManager implements EntityManager {
 		try {
 			flush();
 			connection.close();
+			
+			log.info("connection successfully stopped");
 		} catch (SQLException e) {
 			log.error("can't close connection because : {}", e.getMessage());
 		}
