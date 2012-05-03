@@ -1,8 +1,8 @@
 package org.atomium.repository.impl;
 
-import org.atomium.Entity;
 import org.atomium.EntityManager;
 import org.atomium.repository.SaveableEntityRepository;
+import org.atomium.util.Entity;
 import org.atomium.util.query.Query;
 
 public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>

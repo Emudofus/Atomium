@@ -1,5 +1,6 @@
 package org.atomium.util.query.mysql;
 
+import org.atomium.util.Entity;
 import org.atomium.util.query.Op;
 import org.atomium.util.query.Order;
 
@@ -33,6 +34,19 @@ public class MySqlOp {
 			return "DESC";
 		}
 		return null;
+	}
+	
+	public static String toString(Object obj) {
+		if (obj instanceof Boolean) {
+			return ((Boolean)obj) ? "1" : "0";
+		}
+		else if (obj instanceof Enum<?>) {
+			return Integer.toString(((Enum<?>)obj).ordinal());
+		}
+		else if (obj instanceof Entity<?>) {
+			return ((Entity<?>)obj).id().toString();
+		}
+		return obj.toString();
 	}
 	
 }

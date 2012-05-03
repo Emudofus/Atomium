@@ -1,6 +1,6 @@
 package org.atomium.repository;
 
-import org.atomium.Entity;
+import org.atomium.util.Entity;
 
 public interface PersistableEntityRepository<PK, T extends Entity<PK>>
 	extends EntityRepository<PK, T>

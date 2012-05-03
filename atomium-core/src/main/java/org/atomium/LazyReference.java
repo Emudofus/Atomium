@@ -1,6 +1,7 @@
 package org.atomium;
 
 import org.atomium.repository.EntityRepository;
+import org.atomium.util.Entity;
 import org.atomium.util.Reference;
 
 public class LazyReference<PK, T extends Entity<PK>> implements Reference<T> {

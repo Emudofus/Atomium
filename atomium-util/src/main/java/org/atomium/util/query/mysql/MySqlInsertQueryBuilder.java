@@ -53,7 +53,7 @@ public class MySqlInsertQueryBuilder implements InsertQueryBuilder {
 			if (first) first = false;
 			else sb.append(", ");
 			if (entry.getValue() != null) {
-				sb.append('\'').append(entry.getValue().toString()).append('\'');
+				sb.append('\'').append(MySqlOp.toString(entry.getValue())).append('\'');
 			} else {
 				sb.append("\'#").append(entry.getKey()).append("#\'");
 			}

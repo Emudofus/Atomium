@@ -6,11 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.atomium.Entity;
 import org.atomium.EntityManager;
 import org.atomium.exception.LoadingException;
 import org.atomium.repository.EntityRepository;
 import org.atomium.util.Action1;
+import org.atomium.util.Entity;
 import org.atomium.util.Filter;
 import org.atomium.util.query.Query;
 import org.atomium.util.query.SelectQueryBuilder;

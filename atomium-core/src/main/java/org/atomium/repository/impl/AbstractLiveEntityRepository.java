@@ -5,11 +5,11 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.atomium.Entity;
 import org.atomium.EntityManager;
 import org.atomium.LazyReference;
 import org.atomium.exception.LoadingException;
 import org.atomium.repository.SaveableEntityRepository;
+import org.atomium.util.Entity;
 import org.atomium.util.Filter;
 import org.atomium.util.Function1;
 import org.atomium.util.query.Query;
