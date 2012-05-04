@@ -88,6 +88,11 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 		em.execute(query);
 	}
 	
+	public void saveLater(T entity) {
+		Query query = buildSaveQuery(entity);
+		em.executeLater(query);
+	}
+	
 	public LazyReference<PK,T> getLazyReference(PK pk) {
 		return new LazyReference<PK, T>(pk, this);
 	}
