@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class MySqlOp {
 	
-	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.S";
 	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern(DATE_TIME_PATTERN);
 
 	public static String print(Op op) {
