@@ -1,5 +1,7 @@
 package org.atomium.util.query;
 
+import org.joda.time.format.DateTimeFormatter;
+
 public interface QueryBuilderFactory {
 
 	SelectQueryBuilder select(String table, String... fields);
@@ -9,5 +11,7 @@ public interface QueryBuilderFactory {
 	UpdateQueryBuilder update(String table);
 	
 	DeleteQueryBuilder delete(String table);
+	
+	DateTimeFormatter dateTimeFormatter();
 	
 }

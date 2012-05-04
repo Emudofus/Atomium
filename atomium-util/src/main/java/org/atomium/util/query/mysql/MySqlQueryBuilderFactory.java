@@ -5,6 +5,7 @@ import org.atomium.util.query.InsertQueryBuilder;
 import org.atomium.util.query.QueryBuilderFactory;
 import org.atomium.util.query.SelectQueryBuilder;
 import org.atomium.util.query.UpdateQueryBuilder;
+import org.joda.time.format.DateTimeFormatter;
 
 public class MySqlQueryBuilderFactory implements QueryBuilderFactory {
 
@@ -22,6 +23,10 @@ public class MySqlQueryBuilderFactory implements QueryBuilderFactory {
 
 	public DeleteQueryBuilder delete(String table) {
 		return new MySqlDeleteQueryBuilder(table);
+	}
+
+	public DateTimeFormatter dateTimeFormatter() {
+		return MySqlOp.DATE_TIME_FORMATTER;
 	}
 
 }

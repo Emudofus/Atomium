@@ -3,8 +3,14 @@ package org.atomium.util.query.mysql;
 import org.atomium.util.Entity;
 import org.atomium.util.query.Op;
 import org.atomium.util.query.Order;
+import org.joda.time.ReadableInstant;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class MySqlOp {
+	
+	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern(DATE_TIME_PATTERN);
 
 	public static String print(Op op) {
 		switch (op) {
@@ -45,6 +51,9 @@ public class MySqlOp {
 		}
 		else if (obj instanceof Entity<?>) {
 			return ((Entity<?>)obj).id().toString();
+		}
+		else if (obj instanceof ReadableInstant) {
+			return DATE_TIME_FORMATTER.print((ReadableInstant) obj);
 		}
 		return obj.toString();
 	}
