@@ -16,15 +16,26 @@ public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>
 	
 	protected abstract Query buildSaveQuery(T entity);
 	
+	public void saveLater() {
+		for (T entity : entities.values()) {
+			saveLater(entity);
+		}
+	}
+	
+	public void saveLater(T entity) {
+		Query query = buildSaveQuery(entity);
+		em.executeLater(query);
+	}
+
 	public void save() {
 		for (T entity : entities.values()) {
 			save(entity);
 		}
 	}
-	
+
 	public void save(T entity) {
 		Query query = buildSaveQuery(entity);
-		em.executeLater(query);
+		em.execute(query);
 	}
 
 }

@@ -8,10 +8,21 @@ public interface SaveableEntityRepository<PK, T extends Entity<PK>>
 	/**
 	 * save all entities
 	 */
-	void save();
+	void saveLater();
 	
 	/**
 	 * save only one entity
+	 * @param entity
+	 */
+	void saveLater(T entity);
+	
+	/**
+	 * save all entities now
+	 */
+	void save();
+	
+	/**
+	 * save only one entity now
 	 * @param entity
 	 */
 	void save(T entity);

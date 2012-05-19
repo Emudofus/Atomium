@@ -37,32 +37,26 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 		});
 	}
 
-	@Override
 	public T find(PK pk) {
 		return find(buildLoadQuery(pk));
 	}
 
-	@Override
 	public int count() {
 		return -1;
 	}
 
-	@Override
 	public List<T> filter(Filter<T> filter) {
 		return null;
 	}
 
-	@Override
 	public int load() throws LoadingException {
 		return 0;
 	}
 
-	@Override
 	public boolean loaded() {
 		return true;
 	}
 
-	@Override
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
 			public boolean hasNext() {
@@ -77,12 +71,14 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 			}
 		};
 	}
-
-	@Override
+	
 	public void save() {
+		
 	}
 
-	@Override
+	public void saveLater() {
+	}
+
 	public void save(T entity) {
 		Query query = buildSaveQuery(entity);
 		em.execute(query);
