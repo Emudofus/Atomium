@@ -3,6 +3,7 @@ package org.atomium.repository.impl;
 import org.atomium.EntityManager;
 import org.atomium.LazyReference;
 import org.atomium.PersistableEntity;
+import org.atomium.exception.LoadingException;
 import org.atomium.repository.DeletableEntityRepository;
 import org.atomium.repository.PersistableEntityRepository;
 import org.atomium.util.pk.PrimaryKeyGenerator;
@@ -22,6 +23,12 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 	
 	protected abstract Query buildDeleteQuery(T entity);
 	protected abstract Query buildPersistQuery(T entity);
+
+	protected void afterLoading() throws LoadingException {
+		for (PK pk : entities.keySet()) {
+			pkgen.setMax(pk);
+		}
+	}
 
 	public void delete(T entity) {
 		Query query = buildDeleteQuery(entity);
