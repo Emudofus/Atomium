@@ -43,7 +43,10 @@ public class MySqlOp {
 	}
 	
 	public static String toString(Object obj) {
-		if (obj instanceof Boolean) {
+		if (obj == null) {
+			return "null";
+		}
+		else if (obj instanceof Boolean) {
 			return ((Boolean)obj) ? "1" : "0";
 		}
 		else if (obj instanceof Enum<?>) {
