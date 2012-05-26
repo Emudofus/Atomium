@@ -4,14 +4,13 @@ import org.atomium.EntityManager;
 import org.atomium.LazyReference;
 import org.atomium.PersistableEntity;
 import org.atomium.exception.LoadingException;
-import org.atomium.repository.DeletableEntityRepository;
 import org.atomium.repository.PersistableEntityRepository;
 import org.atomium.util.pk.PrimaryKeyGenerator;
 import org.atomium.util.query.Query;
 
 public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<PK>>
 	extends AbstractSaveableEntityRepository<PK, T>
-	implements PersistableEntityRepository<PK, T>, DeletableEntityRepository<PK, T>
+	implements PersistableEntityRepository<PK, T>
 {
 	
 	private final PrimaryKeyGenerator<PK> pkgen;
@@ -32,12 +31,27 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 
 	public void delete(T entity) {
 		Query query = buildDeleteQuery(entity);
+		em.execute(query);
+		
+		entities.remove(entity.id());
+	}
+
+	public void deleteLater(T entity) {
+		Query query = buildDeleteQuery(entity);
 		em.executeLater(query);
 		
 		entities.remove(entity.id());
 	}
 
 	public void persist(T entity) {
+		entity.setId(pkgen.next());
+		Query query = buildPersistQuery(entity);
+		em.execute(query);
+		
+		entities.put(entity.id(), entity);
+	}
+
+	public void persistLater(T entity) {
 		entity.setId(pkgen.next());
 		Query query = buildPersistQuery(entity);
 		em.executeLater(query);
