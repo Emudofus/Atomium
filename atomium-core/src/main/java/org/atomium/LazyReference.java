@@ -1,17 +1,17 @@
 package org.atomium;
 
-import org.atomium.repository.EntityRepository;
+import org.atomium.repository.BaseEntityRepository;
 import org.atomium.util.Entity;
 import org.atomium.util.Reference;
 
 public class LazyReference<PK, T extends Entity<PK>> implements Reference<T> {
 	
 	private PK pk;
-	private EntityRepository<PK, T> repo;
+	private BaseEntityRepository<PK, T> repo;
 	
 	private T entity;
 	
-	public LazyReference(PK pk, EntityRepository<PK, T> repo) {
+	public LazyReference(PK pk, BaseEntityRepository<PK, T> repo) {
 		this.pk = pk;
 		this.repo = repo;
 	}

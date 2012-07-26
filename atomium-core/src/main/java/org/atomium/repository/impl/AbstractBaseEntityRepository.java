@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.atomium.EntityManager;
 import org.atomium.exception.LoadingException;
-import org.atomium.repository.EntityRepository;
+import org.atomium.repository.BaseEntityRepository;
 import org.atomium.util.Action1;
 import org.atomium.util.Entity;
 import org.atomium.util.Filter;
@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
-	implements EntityRepository<PK, T>
+	implements BaseEntityRepository<PK, T>
 {
 	
 	private boolean loaded;

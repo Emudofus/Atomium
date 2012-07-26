@@ -4,13 +4,13 @@ import org.atomium.EntityManager;
 import org.atomium.LazyReference;
 import org.atomium.PersistableEntity;
 import org.atomium.exception.LoadingException;
-import org.atomium.repository.PersistableEntityRepository;
+import org.atomium.repository.EntityRepository;
 import org.atomium.util.pk.PrimaryKeyGenerator;
 import org.atomium.util.query.Query;
 
 public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<PK>>
 	extends AbstractSaveableEntityRepository<PK, T>
-	implements PersistableEntityRepository<PK, T>
+	implements EntityRepository<PK, T>
 {
 	
 	private final PrimaryKeyGenerator<PK> pkgen;

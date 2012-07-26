@@ -3,7 +3,7 @@ package org.atomium.repository;
 import org.atomium.util.Entity;
 
 public interface PersistableEntityRepository<PK, T extends Entity<PK>>
-	extends EntityRepository<PK, T>
+	extends BaseEntityRepository<PK, T>
 {
 	/**
 	 * create entity in the database now
