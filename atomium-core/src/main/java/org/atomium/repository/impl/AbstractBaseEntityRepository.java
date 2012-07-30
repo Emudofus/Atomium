@@ -97,5 +97,18 @@ public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
 		}
 		return result;
 	}
+
+	public T find(Filter<T> filter) {
+		for (T entity : entities.values()) {
+			try {
+				if (filter.invoke(entity)) {
+					return entity;
+				}
+			} catch (Exception e) {
+				unhandledException(e);
+			}
+		}
+		return null;
+	}
 	
 }

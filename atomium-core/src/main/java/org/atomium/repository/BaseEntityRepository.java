@@ -31,6 +31,13 @@ public interface BaseEntityRepository<PK, T extends Entity<PK>>
 	List<T> filter(Filter<T> filter);
 	
 	/**
+	 * find an entity by a filter
+	 * @param filter the filter
+	 * @return entity
+	 */
+	T find(Filter<T> filter);
+	
+	/**
 	 * return a lazy reference
 	 * @param pk entity's id
 	 * @return reference
