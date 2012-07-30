@@ -49,6 +49,10 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 		return null;
 	}
 
+	public T find(Filter<T> filter) {
+		return null;
+	}
+
 	public int load() throws LoadingException {
 		return 0;
 	}
