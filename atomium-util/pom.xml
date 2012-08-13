@@ -2,9 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.atomium</groupId>
   <artifactId>atomium-util</artifactId>
-  <version>1</version>
   <packaging>jar</packaging>
 
   <name>atomium-util</name>
@@ -18,13 +16,17 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>joda-time</groupId>
     	<artifactId>joda-time</artifactId>
-    	<version>2.1</version>
     </dependency>
   </dependencies>
+  <parent>
+  	<groupId>org.atomium</groupId>
+  	<artifactId>atomium</artifactId>
+  	<version>1</version>
+  	<relativePath>../</relativePath>
+  </parent>
 </project>
