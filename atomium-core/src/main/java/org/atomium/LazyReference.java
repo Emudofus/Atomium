@@ -2,9 +2,8 @@ package org.atomium;
 
 import org.atomium.repository.BaseEntityRepository;
 import org.atomium.util.Entity;
-import org.atomium.util.Reference;
 
-public class LazyReference<PK, T extends Entity<PK>> implements Reference<T> {
+public class LazyReference<PK, T extends Entity<PK>> implements EntityReference<PK, T> {
 	
 	public static <PK, T extends Entity<PK>> LazyReference<PK, T> create(T entity) {
 		return new LazyReference<PK, T>(entity);
