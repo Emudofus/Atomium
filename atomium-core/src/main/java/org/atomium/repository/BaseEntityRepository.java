@@ -2,7 +2,7 @@ package org.atomium.repository;
 
 import java.util.List;
 
-import org.atomium.LazyReference;
+import org.atomium.EntityReference;
 import org.atomium.util.Entity;
 import org.atomium.util.Filter;
 
@@ -38,10 +38,10 @@ public interface BaseEntityRepository<PK, T extends Entity<PK>>
 	T find(Filter<T> filter);
 	
 	/**
-	 * return a lazy reference
+	 * return a reference to an entity
 	 * @param pk entity's id
 	 * @return reference
 	 */
-	LazyReference<PK, T> getLazyReference(PK pk);
+	EntityReference<PK, T> getReference(PK pk);
 	
 }

@@ -59,7 +59,7 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 		entities.put(entity.id(), entity);
 	}
 	
-	public LazyReference<PK,T> getLazyReference(PK pk) {
+	public LazyReference<PK,T> getReference(PK pk) {
 		return new LazyReference<PK, T>(pk, this);
 	}
 

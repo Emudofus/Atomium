@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.atomium.EntityManager;
-import org.atomium.LazyReference;
 import org.atomium.LiveEntityReference;
 import org.atomium.exception.LoadingException;
 import org.atomium.repository.SaveableEntityRepository;
@@ -96,11 +95,7 @@ public abstract class AbstractLiveEntityRepository<PK, T extends Entity<PK>>
 		em.executeLater(query);
 	}
 	
-	public LazyReference<PK,T> getLazyReference(PK pk) {
-		return new LazyReference<PK, T>(pk, this);
-	}
-	
-	public LiveEntityReference<PK, T> getLiveEntityReference(PK pk) {
+	public LiveEntityReference<PK, T> getReference(PK pk) {
 		return new LiveEntityReference<PK, T>(pk, this);
 	}
 	
