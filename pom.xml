@@ -26,9 +26,7 @@
 
     <modules>
         <module>atomium-core</module>
-        <module>mambo-login</module>
-        <module>mambo-common</module>
-        <module>mambo-protocol</module>
+        <module>atomium-util</module>
     </modules>
 
     <dependencyManagement>
