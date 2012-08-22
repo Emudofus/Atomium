@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.atomium.EntityManager;
+import org.atomium.EntityReference;
+import org.atomium.LazyReference;
 import org.atomium.exception.LoadingException;
 import org.atomium.repository.BaseEntityRepository;
 import org.atomium.util.Action1;
@@ -38,13 +40,9 @@ public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
 		return em.builder().select(table, fields);
 	}
 	
-	protected void beforeLoading() throws LoadingException {
-		
-	}
+	protected void beforeLoading() throws LoadingException { }
 	
-	protected void afterLoading() throws LoadingException {
-		
-	}
+	protected void afterLoading() throws LoadingException { }
 	
 	public int load() throws LoadingException {
 		beforeLoading();
@@ -109,6 +107,11 @@ public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public EntityReference<PK, T> getReference(PK pk) {
+		return new LazyReference<PK, T>(pk, this);
 	}
 	
 }

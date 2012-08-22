@@ -10,8 +10,9 @@ public class MySqlQuery implements Query {
 		this.query = query;
 	}
 
-	public void setParameter(String field, Object obj) {
+	public Query setParameter(String field, Object obj) {
 		query = query.replace("#" + field + "#", MySqlOp.toString(obj));
+		return this;
 	}
 	
 	@Override
