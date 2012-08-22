@@ -52,6 +52,7 @@ public abstract class AbstractEntityManager implements EntityManager {
 			log.info("connection successfully opened");
 		} catch (SQLException e) {
 			log.error("can't open connection because : {}", e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 

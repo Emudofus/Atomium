@@ -11,8 +11,12 @@ import org.atomium.EntityManager;
 import org.atomium.util.Action1;
 import org.atomium.util.Entity;
 import org.atomium.util.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractRefreshableEntityRepository<PK, T extends Entity<PK>> extends AbstractSaveableEntityRepository<PK, T> implements ActionListener {
+	
+	private static final Logger log = LoggerFactory.getLogger(AbstractRefreshableEntityRepository.class);
 	
 	private final Timer timer;
 	private final int refreshRate;
@@ -33,6 +37,7 @@ public abstract class AbstractRefreshableEntityRepository<PK, T extends Entity<P
 	}
 	
 	protected abstract Query getRefreshQuery();
+	protected abstract Query getSetRefreshedQuery();
 	
 	protected abstract PK getPrimaryKey(ResultSet rset) throws SQLException;
 	protected abstract void refresh(T entity, ResultSet rset) throws SQLException;
@@ -45,6 +50,8 @@ public abstract class AbstractRefreshableEntityRepository<PK, T extends Entity<P
 		if (entity == null) throw new Exception(String.format("unknown entity %s", pk));
 		
 		refresh(entity, rset);
+		
+		em.execute(getSetRefreshedQuery());
 	}
 	
 	@Override
@@ -55,6 +62,8 @@ public abstract class AbstractRefreshableEntityRepository<PK, T extends Entity<P
 				return null;
 			}
 		});
+		
+		log.debug("repository refreshed");
 	}
 
 }
