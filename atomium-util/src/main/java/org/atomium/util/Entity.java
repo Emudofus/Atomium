@@ -2,6 +2,6 @@ package org.atomium.util;
 
 public interface Entity<PK> {
 
-	PK id();
+	PK getId();
 	
 }

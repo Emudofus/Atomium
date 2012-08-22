@@ -53,7 +53,7 @@ public abstract class AbstractBaseEntityRepository<PK, T extends Entity<PK>>
 				while (arg1.next()) {
 					T entity = load(arg1);
 					if (entity != null) {
-						entities.put(entity.id(), entity);
+						entities.put(entity.getId(), entity);
 					}
 				}
 				return null;

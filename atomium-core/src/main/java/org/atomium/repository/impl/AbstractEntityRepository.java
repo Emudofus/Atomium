@@ -33,14 +33,14 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 		Query query = buildDeleteQuery(entity);
 		em.execute(query);
 		
-		entities.remove(entity.id());
+		entities.remove(entity.getId());
 	}
 
 	public void deleteLater(T entity) {
 		Query query = buildDeleteQuery(entity);
 		em.executeLater(query);
 		
-		entities.remove(entity.id());
+		entities.remove(entity.getId());
 	}
 
 	public void persist(T entity) {
@@ -48,7 +48,7 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 		Query query = buildPersistQuery(entity);
 		em.execute(query);
 		
-		entities.put(entity.id(), entity);
+		entities.put(entity.getId(), entity);
 	}
 
 	public void persistLater(T entity) {
@@ -56,7 +56,7 @@ public abstract class AbstractEntityRepository<PK, T extends PersistableEntity<P
 		Query query = buildPersistQuery(entity);
 		em.executeLater(query);
 		
-		entities.put(entity.id(), entity);
+		entities.put(entity.getId(), entity);
 	}
 	
 	public LazyReference<PK,T> getReference(PK pk) {

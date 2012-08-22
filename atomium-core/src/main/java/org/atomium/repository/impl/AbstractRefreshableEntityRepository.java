@@ -43,13 +43,18 @@ public abstract class AbstractRefreshableEntityRepository<PK, T extends Entity<P
 	protected abstract void refresh(T entity, ResultSet rset) throws SQLException;
 	
 	private void refreshAll(ResultSet rset) throws Exception {
-		PK pk = getPrimaryKey(rset);
-		if (pk == null) throw new Exception("can't get the entity's pk");
-		
-		T entity = entities.get(pk);
-		if (entity == null) throw new Exception(String.format("unknown entity %s", pk));
-		
-		refresh(entity, rset);
+		while (rset.next()) {
+			PK pk = getPrimaryKey(rset);
+			if (pk == null) throw new Exception("can't get the entity's pk");
+			
+			T entity = entities.get(pk);
+			if (entity == null) {
+				entity = load(rset);
+				entities.put(entity.getId(), entity);
+			}
+			
+			refresh(entity, rset);
+		}
 		
 		em.execute(getSetRefreshedQuery());
 	}

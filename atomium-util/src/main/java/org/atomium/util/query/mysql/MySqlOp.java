@@ -53,7 +53,7 @@ public class MySqlOp {
 			return Integer.toString(((Enum<?>)obj).ordinal());
 		}
 		else if (obj instanceof Entity<?>) {
-			return ((Entity<?>)obj).id().toString();
+			return ((Entity<?>)obj).getId().toString();
 		}
 		else if (obj instanceof ReadableInstant) {
 			return DATE_TIME_FORMATTER.print((ReadableInstant) obj);

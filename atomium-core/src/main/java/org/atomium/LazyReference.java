@@ -20,7 +20,7 @@ public class LazyReference<PK, T extends Entity<PK>> implements EntityReference<
 	}
 	
 	public LazyReference(T entity) {
-		this.pk = entity.id();
+		this.pk = entity.getId();
 		this.entity = entity;
 	}
 
