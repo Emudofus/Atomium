@@ -16,6 +16,9 @@ public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>
 	
 	protected abstract Query buildSaveQuery(T entity);
 	
+	protected void beforeSave(T entity) {}
+	protected void onSaved(T entity) {}
+	
 	public void saveLater() {
 		for (T entity : entities.values()) {
 			saveLater(entity);
@@ -23,8 +26,12 @@ public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>
 	}
 	
 	public void saveLater(T entity) {
+		beforeSave(entity);
+		
 		Query query = buildSaveQuery(entity);
 		em.executeLater(query);
+
+		onSaved(entity);
 	}
 
 	public void save() {
@@ -34,8 +41,12 @@ public abstract class AbstractSaveableEntityRepository<PK, T extends Entity<PK>>
 	}
 
 	public void save(T entity) {
+		beforeSave(entity);
+		
 		Query query = buildSaveQuery(entity);
 		em.execute(query);
+
+		onSaved(entity);
 	}
 
 }
