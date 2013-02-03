@@ -18,8 +18,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <cqengine.version>1.0.3</cqengine.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.atomium</groupId>
+            <artifactId>atomium-parent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>${cqengine.version}</version>
+        </dependency>
     </dependencies>
 </project>
