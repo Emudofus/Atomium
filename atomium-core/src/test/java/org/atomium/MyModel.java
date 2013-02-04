@@ -27,12 +27,16 @@ public class MyModel extends Model<IntKey> {
         this.name = name;
     }
 
+    public MyModel() {
+        this(IntKey.create(), Instant.now(), "");
+    }
+
     public Integer getId() {
         return primaryKey.toNumber();
     }
 
     public void setId(Integer id) {
-        this.primaryKey = IntKey.of(id);
+        setPrimaryKey(IntKey.of(id));
     }
 
     public String getName() {
