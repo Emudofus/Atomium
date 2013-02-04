@@ -17,6 +17,7 @@
         <junit.version>4.9</junit.version>
         <guava.version>13.0.1</guava.version>
         <slf4j.version>1.7.2</slf4j.version>
+        <jodatime.version>2.1</jodatime.version>
     </properties>
 
     <dependencies>
@@ -24,6 +25,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
         </dependency>
 
         <dependency>

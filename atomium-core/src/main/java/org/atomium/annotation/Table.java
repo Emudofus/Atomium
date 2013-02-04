@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author blackrush
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 public @interface Table {
     String value();
 }

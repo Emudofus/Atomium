@@ -17,8 +17,12 @@ import java.util.Map;
  * @author blackrush
  */
 public class EntityMetadata<T extends Entity> {
+    public static <T extends Entity> EntityMetadata<T> of(Class<T> klass) {
+        return new EntityMetadata<T>(klass);
+    }
+
     private static String lowerCamelToLowerUnderscore(String string) {
-        return string.replaceAll("[a-z]+([A-Z])", "_$1").toLowerCase();
+        return string.replaceAll("([a-z]+)([A-Z])", "$1_$2").toLowerCase();
     }
 
     private static String getEntityName(Class<?> klass) {
@@ -35,23 +39,31 @@ public class EntityMetadata<T extends Entity> {
         Column annotation = field.getAnnotation(Column.class);
 
         String name;
+        boolean mutable;
         if (annotation == null) {
             name = lowerCamelToLowerUnderscore(field.getName());
+            mutable = true; // FIXME should be false ?
         } else {
             name = annotation.value();
+            mutable = annotation.mutable();
         }
 
-        return new EntityProperty<T>(metadata, name);
+        return new EntityProperty<T>(metadata, field, name, mutable);
     }
 
     private static <T extends Entity> Map<String, EntityProperty<T>> findProperties(EntityMetadata<T> metadata, Class<T> klass) {
         Map<String, EntityProperty<T>> result = Maps.newHashMap();
 
-        for (Field field : klass.getFields()) {
-            if (field.isAnnotationPresent(Ignore.class)) continue;
+        Class<? super T> clazz = klass;
+        while (clazz != Object.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Ignore.class)) continue;
 
-            EntityProperty<T> property = buildProperty(metadata, field);
-            result.put(property.getName(), property);
+                EntityProperty<T> property = buildProperty(metadata, field);
+                result.put(property.getName(), property);
+            }
+
+            clazz = clazz.getSuperclass();
         }
 
         return result;

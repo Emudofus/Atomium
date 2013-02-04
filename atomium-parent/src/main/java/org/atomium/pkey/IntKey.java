@@ -23,7 +23,7 @@ public class IntKey extends NumberKey {
     }
 
     @Override
-    public Number toNumber() {
+    public Integer toNumber() {
         return key;
     }
 }

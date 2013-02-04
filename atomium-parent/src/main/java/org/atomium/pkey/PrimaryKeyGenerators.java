@@ -17,12 +17,13 @@ public final class PrimaryKeyGenerators {
                 .put(LongKey.class, LongKeyGenerator.class)
             .build();
 
-    public static Optional<PrimaryKeyGenerator<?>> of(Class<?> klass) {
+    @SuppressWarnings("unchecked")
+    public static <T extends PrimaryKey> Optional<PrimaryKeyGenerator<T>> of(Class<T> klass) {
         Class<?> generatorClass = keyToGenerator.get(klass);
 
         if (generatorClass != null) {
             try {
-                return Optional.of((PrimaryKeyGenerator<?>) generatorClass.newInstance());
+                return Optional.of((PrimaryKeyGenerator<T>) generatorClass.newInstance());
             } catch (Exception ignored) { }
         }
 

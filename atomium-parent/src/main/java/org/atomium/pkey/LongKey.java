@@ -23,7 +23,7 @@ public class LongKey extends NumberKey {
     }
 
     @Override
-    public Number toNumber() {
+    public Long toNumber() {
         return key;
     }
 }

@@ -27,8 +27,8 @@ public interface Repository<T extends Entity> {
     void tearDown();
 
     /**
-     * find an entity by its pk
-     * @param key pk
+     * find an entity by its primaryKey
+     * @param key primaryKey
      * @return found entity
      */
     Optional<T> find(PrimaryKey key);

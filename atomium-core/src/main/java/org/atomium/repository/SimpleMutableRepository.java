@@ -18,7 +18,7 @@ public class SimpleMutableRepository<T extends MutableEntity<PK>, PK extends Pri
     public SimpleMutableRepository(EntityMetadata<T> metadata) {
         super(metadata);
 
-        this.pkgen = (PrimaryKeyGenerator<PK>) PrimaryKeyGenerators.of(metadata.getPrimaryKeyProperty().getPropertyClass()).get();
+        this.pkgen = PrimaryKeyGenerators.<PK>of((Class<PK>) metadata.getPrimaryKeyProperty().getPropertyClass()).get();
     }
 
     protected PrimaryKeyGenerator<PK> getPrimaryKeyGenerator() {

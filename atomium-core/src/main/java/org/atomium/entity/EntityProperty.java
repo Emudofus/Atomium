@@ -5,51 +5,69 @@ import com.google.common.base.Throwables;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import org.atomium.Entity;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * @author blackrush
  */
 public class EntityProperty<T extends Entity> extends SimpleAttribute<T, Object> {
-    private static Optional<Method> getter(Class<?> klass, String name) {
-        name = "get" + name.replaceAll("_", ""); // assume that name is lowerUnderscore'd so convert it to lowerCamel
-
-        for (Method method : klass.getMethods()) {
-            if (method.getName().equalsIgnoreCase(name)) {
-                return Optional.of(method);
+    private static Optional<Method> getMethod(Class<?> klass, String name) {
+        while (klass != Object.class) {
+            for (Method method : klass.getDeclaredMethods()) {
+                if (method.getName().equalsIgnoreCase(name)) {
+                    return Optional.of(method);
+                }
             }
+            klass = klass.getSuperclass();
         }
 
         return Optional.absent();
     }
 
-    private static Optional<Method> setter(Class<?> klass, String name) {
-        name = "set" + name.replaceAll("_", ""); // assume that name is lowerUnderscore'd so convert it to lowerCamel
-
-        for (Method method : klass.getMethods()) {
-            if (method.getName().equalsIgnoreCase(name)) {
-                return Optional.of(method);
-            }
+    private static Optional<Method> getter(Class<?> klass, Field field, String propertyName) {
+        Optional<Method> getter = getMethod(klass, "get" + field.getName());
+        if (getter.isPresent()) {
+            return getter; // can use Optional.or()
         }
 
-        return Optional.absent();
+        // assume that name is lowerUnderscore'd so convert it to lowerCamel
+        return getMethod(field.getDeclaringClass(), "get" + propertyName.replaceAll("_", ""));
+    }
+
+    private static Optional<Method> setter(Class<?> klass, Field field, String propertyName) {
+        Optional<Method> setter = getMethod(klass, "set" + field.getName());
+        if (setter.isPresent()) {
+            return setter; // can use Optional.or()
+        }
+
+        // assume that name is lowerUnderscore'd so convert it to lowerCamel
+        return getMethod(klass, "set" + propertyName.replaceAll("_", ""));
     }
 
     private final EntityMetadata<T> metadata;
     private final String name;
+    private final boolean mutable;
     private final Method getter, setter;
 
-    public EntityProperty(EntityMetadata<T> metadata, String name) {
+    @SuppressWarnings("unchecked") // fucking generics
+    public EntityProperty(EntityMetadata<T> metadata, Field field, String name, boolean mutable) {
+        super(metadata.getEntityClass(), (Class<Object>) field.getType(), name);
+
         // this class is instantiated in the EntityMetadata's ctor so be careful !
 
         this.metadata = checkNotNull(metadata);
         this.name = name;
+        this.mutable = mutable;
 
         // safe because EntityMetadata's entity class has been initialized
-        this.getter = getter(metadata.getEntityClass(), name).get();
-        this.setter = setter(metadata.getEntityClass(), name).get();
+        this.getter = getter(metadata.getEntityClass(), field, name).get();
+        this.setter = mutable ?
+                setter(metadata.getEntityClass(), field, name).get() :
+                null;
     }
 
     /**
@@ -64,6 +82,13 @@ public class EntityProperty<T extends Entity> extends SimpleAttribute<T, Object>
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return <code>true</code> if this property is mutable
+     */
+    public boolean isMutable() {
+        return mutable;
     }
 
     /**
@@ -97,6 +122,8 @@ public class EntityProperty<T extends Entity> extends SimpleAttribute<T, Object>
      * @param value new value
      */
     public void set(T entity, Object value) {
+        checkState(mutable, "you can't set an immutable property");
+
         try {
             setter.invoke(entity, value);
         } catch (Exception e) {
