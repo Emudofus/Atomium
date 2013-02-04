@@ -8,14 +8,15 @@ import org.joda.time.Instant;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * you must define a constructor without any parameters in your model's implementation
  * @author blackrush
  */
 public class Model<PK extends PrimaryKey> implements MutableEntity<PK>, Timestampable {
     @Column("id")
     protected PK primaryKey;
 
-    @Column(value = "created_at", mutable = false)
-    protected final Instant createdAt;
+    @Column("created_at")
+    protected Instant createdAt;
 
     @Column("persisted_at")
     protected Instant persistedAt;
@@ -33,6 +34,10 @@ public class Model<PK extends PrimaryKey> implements MutableEntity<PK>, Timestam
         this.createdAt = checkNotNull(createdAt);
     }
 
+    public Model(PK primaryKey) {
+        this(primaryKey, Instant.now());
+    }
+
     @Override
     public PK getPrimaryKey() {
         return primaryKey;
@@ -46,6 +51,11 @@ public class Model<PK extends PrimaryKey> implements MutableEntity<PK>, Timestam
     @Override
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = checkNotNull(createdAt);
     }
 
     @Override

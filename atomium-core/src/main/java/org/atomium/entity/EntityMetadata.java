@@ -2,6 +2,7 @@ package org.atomium.entity;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.atomium.Entity;
@@ -11,6 +12,7 @@ import org.atomium.annotation.Table;
 import org.atomium.pkey.PrimaryKey;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -108,6 +110,10 @@ public class EntityMetadata<T extends Entity> {
 
     public EntityProperty<T> getPrimaryKeyProperty() {
         return pkProperty;
+    }
+
+    public List<EntityProperty<T>> getProperties() {
+        return ImmutableList.copyOf(properties.values());
     }
 
     public Optional<EntityProperty<T>> getProperty(String name) {

@@ -13,6 +13,11 @@ public interface Timestampable {
     Instant getCreatedAt();
 
     /**
+     * @param createdAt the instant when this instance has been created (must not be null)
+     */
+    void setCreatedAt(Instant createdAt);
+
+    /**
      * FIXME convert it to Optional ?
      * @return the instant when this instance has been persisted
      */
