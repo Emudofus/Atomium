@@ -2,6 +2,7 @@ package org.atomium;
 
 import com.google.common.collect.Maps;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
@@ -9,7 +10,7 @@ import static java.util.Arrays.asList;
 /**
  * @author blackrush
  */
-public abstract class NamedValues {
+public abstract class NamedValues implements Iterable<Object> {
     public abstract Object get(String name);
     public NamedValues set(String name, Object o) {
         return this;
@@ -41,6 +42,11 @@ public abstract class NamedValues {
             values.put(name, o);
             return this;
         }
+
+        @Override
+        public Iterator<Object> iterator() {
+            return values.values().iterator();
+        }
     }
 
     private static class CombinedNamedValues extends NamedValues {
@@ -59,6 +65,45 @@ public abstract class NamedValues {
                 if (o != null) return o;
             }
             return null;
+        }
+
+        @Override
+        public Iterator<Object> iterator() {
+            return new TheIterator();
+        }
+
+        private class TheIterator implements Iterator<Object> {
+
+            private Iterator<NamedValues> it;
+            private Iterator<Object> it2;
+
+            private TheIterator() {
+                it = namedValues.iterator();
+                it2 = it.hasNext() ? it.next().iterator() : null;
+            }
+
+            @Override
+            public boolean hasNext() {
+                if (it2 == null) return false;
+
+                if (!it2.hasNext()) {
+                    if (!it.hasNext()) return false;
+                    it2 = it.next().iterator();
+                }
+
+                return it2.hasNext() || hasNext();
+
+            }
+
+            @Override
+            public Object next() {
+                return it2.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         }
     }
 }
