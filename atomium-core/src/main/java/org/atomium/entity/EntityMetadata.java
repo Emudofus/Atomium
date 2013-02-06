@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.atomium.Entity;
-import org.atomium.annotation.Column;
 import org.atomium.annotation.Ignore;
 import org.atomium.annotation.Table;
 import org.atomium.pkey.PrimaryKey;
@@ -23,7 +22,7 @@ public class EntityMetadata<T extends Entity> {
         return new EntityMetadata<T>(klass);
     }
 
-    private static String lowerCamelToLowerUnderscore(String string) {
+    public static String lowerCamelToLowerUnderscore(String string) {
         return string.replaceAll("([a-z]+)([A-Z])", "$1_$2").toLowerCase();
     }
 
@@ -37,22 +36,6 @@ public class EntityMetadata<T extends Entity> {
         }
     }
 
-    private static <T extends Entity> EntityProperty<T> buildProperty(EntityMetadata<T> metadata, Field field) {
-        Column annotation = field.getAnnotation(Column.class);
-
-        String name;
-        boolean mutable;
-        if (annotation == null) {
-            name = lowerCamelToLowerUnderscore(field.getName());
-            mutable = true; // FIXME should be false ?
-        } else {
-            name = annotation.value();
-            mutable = annotation.mutable();
-        }
-
-        return new EntityProperty<T>(metadata, field, name, mutable);
-    }
-
     private static <T extends Entity> Map<String, EntityProperty<T>> findProperties(EntityMetadata<T> metadata, Class<T> klass) {
         Map<String, EntityProperty<T>> result = Maps.newHashMap();
 
@@ -61,7 +44,7 @@ public class EntityMetadata<T extends Entity> {
             for (Field field : clazz.getDeclaredFields()) {
                 if (field.isAnnotationPresent(Ignore.class)) continue;
 
-                EntityProperty<T> property = buildProperty(metadata, field);
+                EntityProperty<T> property = EntityProperty.of(metadata, field);
                 result.put(property.getName(), property);
             }
 
