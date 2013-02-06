@@ -15,6 +15,7 @@ public abstract class NamedValues implements Iterable<Object> {
     public NamedValues set(String name, Object o) {
         return this;
     }
+    public abstract Map<String, Object> toMap();
 
     public static NamedValues simple() {
         return new SimpleNamedValues();
@@ -44,6 +45,11 @@ public abstract class NamedValues implements Iterable<Object> {
         }
 
         @Override
+        public Map<String, Object> toMap() {
+            return values;
+        }
+
+        @Override
         public Iterator<Object> iterator() {
             return values.values().iterator();
         }
@@ -65,6 +71,15 @@ public abstract class NamedValues implements Iterable<Object> {
                 if (o != null) return o;
             }
             return null;
+        }
+
+        @Override
+        public Map<String, Object> toMap() {
+            Map<String, Object> result = Maps.newHashMap();
+            for (NamedValues iNamedValues : namedValues) {
+                result.putAll(iNamedValues.toMap());
+            }
+            return result;
         }
 
         @Override

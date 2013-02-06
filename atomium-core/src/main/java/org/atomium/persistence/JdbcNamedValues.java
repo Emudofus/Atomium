@@ -1,10 +1,13 @@
 package org.atomium.persistence;
 
+import com.google.common.collect.Maps;
 import org.atomium.NamedValues;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -28,6 +31,24 @@ public class JdbcNamedValues extends NamedValues implements Iterable<Object> {
     public Object get(String name) {
         try {
             return resultSet.getObject(name);
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        try {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            Map<String, Object> result = Maps.newHashMap();
+
+            for (int i = 1; i <= metaData.getColumnCount(); ++i) {
+                String name = metaData.getColumnName(i);
+                Object value = resultSet.getObject(i);
+                result.put(name, value);
+            }
+
+            return result;
         } catch (SQLException e) {
             throw propagate(e);
         }

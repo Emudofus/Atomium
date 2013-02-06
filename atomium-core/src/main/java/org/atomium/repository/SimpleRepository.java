@@ -47,7 +47,7 @@ public class SimpleRepository<T extends Entity> implements Repository<T> {
 
         this.context = context;
 
-        Iterable<T> entities = context.getPersistenceStrategy().read(getEntityMetadata());
+        Iterable<T> entities = context.getPersistenceStrategy().read(getContext(), getEntityMetadata());
         for (T entity : entities) {
             getEntities().add(entity);
         }
@@ -55,7 +55,7 @@ public class SimpleRepository<T extends Entity> implements Repository<T> {
 
     @Override
     public void tearDown() {
-        getContext().getPersistenceStrategy().update(getEntities(), getEntityMetadata());
+        getContext().getPersistenceStrategy().update(context, getEntityMetadata(), getEntities());
     }
 
     protected DatabaseContext getContext() {

@@ -1,9 +1,8 @@
 package org.atomium.persistence;
 
 import com.google.common.collect.Lists;
-import org.atomium.Entity;
-import org.atomium.PersistenceStrategy;
-import org.atomium.Query;
+import com.google.common.collect.Maps;
+import org.atomium.*;
 import org.atomium.entity.EntityMetadata;
 import org.atomium.entity.EntityProperty;
 
@@ -12,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
@@ -22,6 +22,8 @@ import static java.util.Collections.singleton;
  * @author blackrush
  */
 public class JdbcPersistenceStrategy implements PersistenceStrategy {
+    private final Map<Class<?>, TypeConverter> typeConverters = Maps.newHashMap();
+
     private final Dialect dialect;
     private final Connection connection;
 
@@ -48,12 +50,55 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         }
     }
 
+    @Override
+    public void setImplicitTypeConverter(TypeConverter typeConverter) {
+        typeConverters.put(typeConverter.getTargetClass(), typeConverter);
+    }
+
+    protected TypeConverter getTypeConverterOrRegister(Class<? extends TypeConverter> typeConverterClass) {
+        for (TypeConverter typeConverter : typeConverters.values()) {
+            if (typeConverterClass.isAssignableFrom(typeConverter.getClass())) {
+                return typeConverter;
+            }
+        }
+
+        try {
+            TypeConverter typeConverter = typeConverterClass.newInstance();
+            typeConverters.put(typeConverter.getTargetClass(), typeConverter);
+            return typeConverter;
+        } catch (Exception e) {
+            throw propagate(e);
+        }
+    }
+
+    private <T extends Entity> TypeConverter getTypeConverter(EntityProperty<T> property) {
+        return property.getTypeConverter().isPresent()
+                ? getTypeConverterOrRegister(property.getTypeConverter().get())
+                : typeConverters.get(property.getPropertyClass());
+    }
+
     protected void commit() {
         try {
             connection.commit();
         } catch (SQLException e) {
             throw propagate(e);
         }
+    }
+
+    protected <T extends Entity> NamedValues export(EntityMetadata<T> metadata, T entity, DatabaseContext ctx) {
+        NamedValues values = NamedValues.simple();
+
+        for (EntityProperty<T> property : metadata.getProperties()) {
+            TypeConverter typeConverter = getTypeConverter(property);
+
+            if (typeConverter != null) {
+                typeConverter.export(ctx, entity, property, values);
+            } else {
+                values.set(property.getName(), property.get(entity));
+            }
+        }
+
+        return values;
     }
 
     protected void setParameters(Query query, PreparedStatement statement) throws SQLException{
@@ -103,21 +148,15 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         }
     }
 
-    protected <T extends Entity> Iterable<T> map(ResultSet rset, EntityMetadata<T> metadata) {
+    protected <T extends Entity> Iterable<T> map(DatabaseContext ctx, ResultSet rset, EntityMetadata<T> metadata) {
         try {
             rset.beforeFirst();
 
-            List<EntityProperty<T>> properties = metadata.getProperties();
+            NamedValues values = JdbcNamedValues.of(rset);
             List<T> result = Lists.newArrayList();
 
             while (rset.next()) {
-                T entity = metadata.create();
-
-                for (EntityProperty<T> property : properties) {
-                    Object value = rset.getObject(property.getName());
-                    property.set(entity, value); // TODO extract
-                }
-
+                T entity = createEntity(ctx, metadata, values);
                 result.add(entity);
             }
 
@@ -131,13 +170,29 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         }
     }
 
-    @Override
-    public <T extends Entity> void create(T entity, EntityMetadata<T> metadata) {
-        create(singleton(entity), metadata);
+    private <T extends Entity> T createEntity(DatabaseContext ctx, EntityMetadata<T> metadata, NamedValues values) throws SQLException {
+        T entity = metadata.create();
+
+        for (EntityProperty<T> property : metadata.getProperties()) {
+            TypeConverter typeConverter = getTypeConverter(property);
+
+            Object value = typeConverter != null
+                    ? typeConverter.extract(ctx, entity, property, values)
+                    : values.get(property.getName());
+
+            property.set(entity, value);
+        }
+
+        return entity;
     }
 
     @Override
-    public <T extends Entity> void create(Iterable<T> entities, EntityMetadata<T> metadata) {
+    public <T extends Entity> void create(DatabaseContext ctx, EntityMetadata<T> metadata, T entity) {
+        create(ctx, metadata, singleton(entity));
+    }
+
+    @Override
+    public <T extends Entity> void create(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
             execute(dialect.insert(metadata, entity));
         }
@@ -145,17 +200,17 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public <T extends Entity> Iterable<T> read(EntityMetadata<T> metadata) {
-        return map(query(dialect.select(metadata)), metadata);
+    public <T extends Entity> Iterable<T> read(DatabaseContext ctx, EntityMetadata<T> metadata) {
+        return map(ctx, query(dialect.select(metadata)), metadata);
     }
 
     @Override
-    public <T extends Entity> void update(T entity, EntityMetadata<T> metadata) {
-        update(singleton(entity), metadata);
+    public <T extends Entity> void update(DatabaseContext ctx, EntityMetadata<T> metadata, T entity) {
+        update(ctx, metadata, singleton(entity));
     }
 
     @Override
-    public <T extends Entity> void update(Iterable<T> entities, EntityMetadata<T> metadata) {
+    public <T extends Entity> void update(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
             execute(dialect.update(metadata, entity));
         }
@@ -163,12 +218,12 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public <T extends Entity> void destroy(T entity, EntityMetadata<T> metadata) {
-        destroy(singleton(entity), metadata);
+    public <T extends Entity> void destroy(DatabaseContext ctx, EntityMetadata<T> metadata, T entity) {
+        destroy(ctx, metadata, singleton(entity));
     }
 
     @Override
-    public <T extends Entity> void destroy(Iterable<T> entities, EntityMetadata<T> metadata) {
+    public <T extends Entity> void destroy(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
             execute(dialect.delete(metadata, entity));
         }

@@ -10,14 +10,16 @@ public interface PersistenceStrategy {
     void setUp();
     void tearDown();
 
-    <T extends Entity> void create(T entity, EntityMetadata<T> metadata);
-    <T extends Entity> void create(Iterable<T> entity, EntityMetadata<T> metadata);
+    void setImplicitTypeConverter(TypeConverter typeConverter);
 
-    <T extends Entity> Iterable<T> read(EntityMetadata<T> metadata);
+    <T extends Entity> void create(DatabaseContext ctx, EntityMetadata<T> metadata, T entity);
+    <T extends Entity> void create(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entity);
 
-    <T extends Entity> void update(T entity, EntityMetadata<T> metadata);
-    <T extends Entity> void update(Iterable<T> entity, EntityMetadata<T> metadata);
+    <T extends Entity> Iterable<T> read(DatabaseContext ctx, EntityMetadata<T> metadata);
 
-    <T extends Entity> void destroy(T entity, EntityMetadata<T> metadata);
-    <T extends Entity> void destroy(Iterable<T> entity, EntityMetadata<T> metadata);
+    <T extends Entity> void update(DatabaseContext ctx, EntityMetadata<T> metadata, T entity);
+    <T extends Entity> void update(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entity);
+
+    <T extends Entity> void destroy(DatabaseContext ctx, EntityMetadata<T> metadata, T entity);
+    <T extends Entity> void destroy(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entity);
 }

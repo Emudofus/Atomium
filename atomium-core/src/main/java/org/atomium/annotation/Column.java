@@ -27,12 +27,16 @@ public @interface Column {
             throw new UnsupportedOperationException();
         }
 
-        public <T extends Entity> NamedValues export(DatabaseContext ctx, T entity, EntityProperty<T> property) {
-            return null;
+        public Class<?> getTargetClass() {
+            throw new UnsupportedOperationException();
+        }
+
+        public <T extends Entity> void export(DatabaseContext ctx, T entity, EntityProperty<T> property, NamedValues raw) {
+            throw new UnsupportedOperationException();
         }
 
         public <T extends Entity> Object extract(DatabaseContext ctx, T entity, EntityProperty<T> property, NamedValues raw) {
-            return null;
+            throw new UnsupportedOperationException();
         }
     }
 }

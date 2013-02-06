@@ -48,7 +48,7 @@ public class SimpleMutableRepository<T extends MutableEntity<PK>, PK extends Pri
     public void tearDown() {
         super.tearDown();
 
-        getContext().getPersistenceStrategy().update(getEntities(), getEntityMetadata());
+        getContext().getPersistenceStrategy().update(getContext(), getEntityMetadata(), getEntities());
     }
 
     @Override
@@ -67,16 +67,16 @@ public class SimpleMutableRepository<T extends MutableEntity<PK>, PK extends Pri
     public void persist(T entity) {
         if (isPersisted(entity)) {
             insert(entity);
-            getContext().getPersistenceStrategy().create(entity, getEntityMetadata());
+            getContext().getPersistenceStrategy().create(getContext(), getEntityMetadata(), entity);
         } else {
-            getContext().getPersistenceStrategy().update(entity, getEntityMetadata());
+            getContext().getPersistenceStrategy().update(getContext(), getEntityMetadata(), entity);
         }
     }
 
     @Override
     public void delete(T entity) {
         if (isPersisted(entity)) {
-            getContext().getPersistenceStrategy().destroy(entity, getEntityMetadata());
+            getContext().getPersistenceStrategy().destroy(getContext(), getEntityMetadata(), entity);
         }
     }
 }

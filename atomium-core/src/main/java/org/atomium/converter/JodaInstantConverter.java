@@ -18,14 +18,19 @@ public final class JodaInstantConverter implements TypeConverter {
     public static final JodaInstantConverter INSTANCE = new JodaInstantConverter();
 
     @Override
-    public <T extends Entity> NamedValues export(DatabaseContext ctx, T entity, EntityProperty<T> property) {
+    public Class<Instant> getTargetClass() {
+        return Instant.class;
+    }
+
+    @Override
+    public <T extends Entity> void export(DatabaseContext ctx, T entity, EntityProperty<T> property, NamedValues raw) {
         Object o = property.get(entity);
 
         Date export = o instanceof Instant
                 ? ((Instant) o).toDate()
                 : new Timestamp(0);
 
-        return NamedValues.simple().set(property.getName(), export);
+        raw.set(property.getName(), export);
     }
 
     @Override
