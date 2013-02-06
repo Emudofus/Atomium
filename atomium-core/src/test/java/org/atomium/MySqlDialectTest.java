@@ -7,8 +7,6 @@ import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -29,10 +27,10 @@ public class MySqlDialectTest {
 
     @Test
     public void select() {
-        String query = dialect.select(metadata);
+        Query query = dialect.select(metadata);
 
-        assertTrue(query.equals(
-        "SELECT `id`,`persisted_at`,`my_custom_name`,`deleted_at`,`created_at` FROM `my_custom_model`;"));
+        assertTrue(query.getCommand().equals(
+                "SELECT `id`,`persisted_at`,`my_custom_name`,`deleted_at`,`created_at` FROM `my_custom_model`;"));
     }
 
     @Test
@@ -40,29 +38,12 @@ public class MySqlDialectTest {
         MyModel instance = new MyModel();
         instance.setPersistedAt(Instant.now());
         instance.setName("coucou");
-        String query = dialect.insert(singleton(instance), metadata);
 
-        assertThat(query, equalTo(
+        Query query = dialect.insert(metadata, instance);
+
+        assertThat(query.getCommand(), equalTo(
         "INSERT INTO `my_custom_model`(`id`,`persisted_at`,`my_custom_name`,`deleted_at`,`created_at`) " +
-        "VALUES ('" + instance.getId() + "','" + instance.getPersistedAt() + "','" + instance.getName() + "',NULL,'" + instance.getCreatedAt() + "');"));
-    }
-
-    @Test
-    public void multipleInsert() {
-        MyModel instance = new MyModel(), instance2 = new MyModel();
-        instance.setId(1);
-        instance.setPersistedAt(Instant.now());
-        instance.setName("coucou");
-        instance2.setId(2);
-        instance2.setPersistedAt(Instant.now());
-        instance2.setName("kikou");
-
-        String query = dialect.insert(asList(instance, instance2), metadata);
-
-        assertThat(query, equalTo(
-        "INSERT INTO `my_custom_model`(`id`,`persisted_at`,`my_custom_name`,`deleted_at`,`created_at`) VALUES " +
-        "('" + instance.getId() + "','" + instance.getPersistedAt() + "','" + instance.getName() + "',NULL,'" + instance.getCreatedAt() + "')," +
-        "('" + instance2.getId() + "','" + instance2.getPersistedAt() + "','" + instance2.getName() + "',NULL,'" + instance2.getCreatedAt() + "');"));
+        "VALUES (?,?,?,?,?);"));
     }
 
     @Test
@@ -70,20 +51,9 @@ public class MySqlDialectTest {
         MyModel instance = new MyModel();
         instance.setId(1);
 
-        String query = dialect.delete(singleton(instance), metadata);
+        Query query = dialect.delete(metadata, instance);
 
-        assertThat(query, equalTo("DELETE FROM `my_custom_model` WHERE `id`='1';"));
-    }
-
-    @Test
-    public void multipleDelete() {
-        MyModel instance = new MyModel(), instance2 = new MyModel();
-        instance.setId(1);
-        instance2.setId(2);
-
-        String query = dialect.delete(asList(instance, instance2), metadata);
-
-        assertThat(query, equalTo("DELETE FROM `my_custom_model` WHERE `id`='1' OR `id`='2';"));
+        assertThat(query.getCommand(), equalTo("DELETE FROM `my_custom_model` WHERE `id`=?;"));
     }
 
     @Test
@@ -91,43 +61,15 @@ public class MySqlDialectTest {
         MyModel instance = new MyModel();
         instance.setPersistedAt(Instant.now());
         instance.setName("coucou");
-        String query = dialect.update(singleton(instance), metadata);
 
-        assertThat(query, equalTo(
+        Query query = dialect.update(metadata, instance);
+
+        assertThat(query.getCommand(), equalTo(
         "UPDATE `my_custom_model` SET " +
-                "`persisted_at`='" + instance.getPersistedAt() + "'," +
-                "`my_custom_name`='" + instance.getName() + "'," +
-                "`deleted_at`=NULL," +
-                "`created_at`='" + instance.getCreatedAt() + "'" +
-        " WHERE `id`='" + instance.getId() + "';"));
-    }
-
-    @Test
-    public void multipleUpdate() {
-        MyModel instance = new MyModel(), instance2 = new MyModel();
-        instance.setId(1);
-        instance.setPersistedAt(Instant.now());
-        instance.setName("coucou");
-        instance2.setId(2);
-        instance2.setPersistedAt(Instant.now());
-        instance2.setName("kikou");
-
-        String query = dialect.update(asList(instance, instance2), metadata);
-
-
-        assertThat(query, equalTo(
-        "UPDATE `my_custom_model` SET " +
-                "`persisted_at`='" + instance.getPersistedAt() + "'," +
-                "`my_custom_name`='" + instance.getName() + "'," +
-                "`deleted_at`=NULL," +
-                "`created_at`='" + instance.getCreatedAt() + "'" +
-        " WHERE `id`='" + instance.getId() + "';" +
-
-        "UPDATE `my_custom_model` SET " +
-                "`persisted_at`='" + instance2.getPersistedAt() + "'," +
-                "`my_custom_name`='" + instance2.getName() + "'," +
-                "`deleted_at`=NULL," +
-                "`created_at`='" + instance2.getCreatedAt() + "'" +
-        " WHERE `id`='" + instance2.getId() + "';"));
+                "`persisted_at`=?," +
+                "`my_custom_name`=?," +
+                "`deleted_at`=?," +
+                "`created_at`=?" +
+        " WHERE `id`=?;"));
     }
 }

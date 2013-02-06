@@ -3,13 +3,14 @@ package org.atomium.persistence;
 import com.google.common.collect.Lists;
 import org.atomium.Entity;
 import org.atomium.PersistenceStrategy;
+import org.atomium.Query;
 import org.atomium.entity.EntityMetadata;
 import org.atomium.entity.EntityProperty;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,6 +18,7 @@ import static com.google.common.base.Throwables.propagate;
 import static java.util.Collections.singleton;
 
 /**
+ * you are only responsible of {@link Connection}'s creation (this class automatically close the given connection)
  * @author blackrush
  */
 public class JdbcPersistenceStrategy implements PersistenceStrategy {
@@ -28,12 +30,50 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         this.connection = checkNotNull(connection);
     }
 
-    protected void execute(String query) {
-        Statement statement = null;
+    @Override
+    public void setUp() {
         try {
-            statement = connection.createStatement();
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
 
-            statement.executeUpdate(query);
+    @Override
+    public void tearDown() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
+
+    protected void commit() {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
+
+    protected void setParameters(Query query, PreparedStatement statement) throws SQLException{
+        int i = 1;
+        for (Object parameter : query.getParameters()) {
+            statement.setObject(i++, parameter); // TODO export
+        }
+    }
+
+    /**
+     * you must commit by yourself
+     * @param query query to execute
+     */
+    protected void execute(Query query) {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(query.getCommand());
+            setParameters(query, statement);
+
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw propagate(e);
         } finally {
@@ -45,12 +85,13 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         }
     }
 
-    protected ResultSet query(String query) {
-        Statement statement = null;
+    protected ResultSet query(Query query) {
+        PreparedStatement statement = null;
         try {
-            statement = connection.createStatement();
+            statement = connection.prepareStatement(query.getCommand());
+            setParameters(query, statement);
 
-            return statement.executeQuery(query);
+            return statement.executeQuery();
         } catch (SQLException e) {
             throw propagate(e);
         } finally {
@@ -74,7 +115,7 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
 
                 for (EntityProperty<T> property : properties) {
                     Object value = rset.getObject(property.getName());
-                    property.set(entity, value);
+                    property.set(entity, value); // TODO extract
                 }
 
                 result.add(entity);
@@ -96,8 +137,11 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public <T extends Entity> void create(Iterable<T> entity, EntityMetadata<T> metadata) {
-        execute(dialect.insert(entity, metadata));
+    public <T extends Entity> void create(Iterable<T> entities, EntityMetadata<T> metadata) {
+        for (T entity : entities) {
+            execute(dialect.insert(metadata, entity));
+        }
+        commit();
     }
 
     @Override
@@ -111,8 +155,11 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public <T extends Entity> void update(Iterable<T> entity, EntityMetadata<T> metadata) {
-        execute(dialect.update(entity, metadata));
+    public <T extends Entity> void update(Iterable<T> entities, EntityMetadata<T> metadata) {
+        for (T entity : entities) {
+            execute(dialect.update(metadata, entity));
+        }
+        commit();
     }
 
     @Override
@@ -121,7 +168,10 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     }
 
     @Override
-    public <T extends Entity> void destroy(Iterable<T> entity, EntityMetadata<T> metadata) {
-        execute(dialect.delete(entity, metadata));
+    public <T extends Entity> void destroy(Iterable<T> entities, EntityMetadata<T> metadata) {
+        for (T entity : entities) {
+            execute(dialect.delete(metadata, entity));
+        }
+        commit();
     }
 }

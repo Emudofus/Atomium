@@ -1,9 +1,13 @@
 package org.atomium.persistence.dialect;
 
+import com.google.common.collect.Lists;
 import org.atomium.Entity;
+import org.atomium.Query;
 import org.atomium.entity.EntityMetadata;
 import org.atomium.entity.EntityProperty;
 import org.atomium.persistence.Dialect;
+
+import java.util.List;
 
 /**
  * @author blackrush
@@ -13,109 +17,78 @@ public class MySqlDialect implements Dialect {
         return "`" + item + "`";
     }
 
-    private static String q(String item) {
-        return "'" + item + "'";
-    }
-
     @Override
-    public <T extends Entity> String insert(Iterable<T> entities, EntityMetadata<T> metadata) {
-        boolean first, first2;
+    public <T extends Entity> Query insert(EntityMetadata<T> metadata, T entity) {
+        boolean first;
+        List<EntityProperty<T>> properties = metadata.getProperties();
+        List<Object> parameters = Lists.newArrayList();
         StringBuilder query = new StringBuilder();
 
-        query.append("INSERT INTO ").append(t(metadata.getName()));
-
-        query.append('(');
+        query.append("INSERT INTO ").append(t(metadata.getName())).append('(');
 
         first = true;
-        for (EntityProperty<T> prop : metadata.getProperties()) {
+        for (EntityProperty<T> prop : properties) {
             if (first) first = false;
             else query.append(',');
 
             query.append(t(prop.getName()));
         }
 
-        query.append(')');
-
-        query.append(" VALUES ");
+        query.append(") VALUES (");
 
         first = true;
-        for (T entity : entities) {
+        for (EntityProperty<T> prop : properties) {
             if (first) first = false;
             else query.append(',');
 
-            query.append('(');
-
-            first2 = true;
-            for (EntityProperty<T> prop : metadata.getProperties()) {
-                if (first2) first2 = false;
-                else query.append(',');
-
-                Object value = prop.get(entity);
-                if (value != null) {
-                    query.append(q(value.toString())); // TODO
-                } else {
-                    query.append("NULL");
-                }
-            }
-
-            query.append(')');
+            query.append('?');
+            parameters.add(prop.get(entity));
         }
 
-        query.append(';');
-
-        return query.toString();
+        return Query.create(query.append(");").toString(), parameters);
     }
 
     @Override
-    public <T extends Entity> String update(Iterable<T> entities, EntityMetadata<T> metadata) {
+    public <T extends Entity> Query update(EntityMetadata<T> metadata, T entity) {
         boolean first;
+        List<Object> parameters = Lists.newArrayList();
         StringBuilder query = new StringBuilder();
 
-        for (T entity : entities) {
-            query.append("UPDATE ").append(t(metadata.getName())).append(" SET ");
+        query.append("UPDATE ").append(t(metadata.getName())).append(" SET ");
 
-            first = true;
-            for (EntityProperty<T> prop : metadata.getProperties()) {
-                if (prop == metadata.getPrimaryKeyProperty()) continue;
+        first = true;
+        for (EntityProperty<T> prop : metadata.getProperties()) {
+            if (prop == metadata.getPrimaryKeyProperty()) continue;
 
-                if (first) first = false;
-                else query.append(',');
+            if (first) first = false;
+            else query.append(',');
 
-                Object value = prop.get(entity);
-
-                query.append(t(prop.getName())).append('=').append(value == null ? "NULL" : q(value.toString()));
-            }
-
-            query.append(" WHERE ").append(t(metadata.getPrimaryKeyProperty().getName()))
-                 .append('=').append(q(metadata.getPrimaryKeyProperty().get(entity).toString()))
-                 .append(';');
+            query.append(t(prop.getName())).append("=?");
+            parameters.add(prop.get(entity));
         }
 
-        return query.toString();
+        query.append(" WHERE ").append(t(metadata.getPrimaryKeyProperty().getName())).append("=?");
+
+        parameters.add(metadata.getPrimaryKeyProperty().get(entity));
+
+        return Query.create(query.append(';').toString(), parameters);
     }
 
     @Override
-    public <T extends Entity> String delete(Iterable<T> entities, EntityMetadata<T> metadata) {
-        boolean first;
+    public <T extends Entity> Query delete(EntityMetadata<T> metadata, T entity) {
+        List<Object> parameters = Lists.newArrayList();
         StringBuilder query = new StringBuilder();
 
         query.append("DELETE FROM ").append(t(metadata.getName()))
-             .append(" WHERE ").append(t(metadata.getPrimaryKeyProperty().getName()));
+             .append(" WHERE ").append(t(metadata.getPrimaryKeyProperty().getName())).append("=?");
 
-        first = true;
-        for (T entity : entities) {
-            if (first) first = false;
-            else query.append(" OR ").append(t(metadata.getPrimaryKeyProperty().getName()));
+        parameters.add(metadata.getPrimaryKeyProperty().get(entity));
 
-            query.append('=')
-                 .append(q(metadata.getPrimaryKeyProperty().get(entity).toString()));
-        }
-
-        return query.append(';').toString();
+        return Query.create(query.append(';').toString(), parameters);
     }
 
     @Override
-    public <T extends Entity> String select(EntityMetadata<T> metadata) {
+    public <T extends Entity> Query select(EntityMetadata<T> metadata) {
         boolean first;
         StringBuilder query = new StringBuilder();
 
@@ -131,6 +104,6 @@ public class MySqlDialect implements Dialect {
 
         query.append(" FROM ").append(t(metadata.getName())).append(';');
 
-        return query.toString();
+        return Query.create(query.toString());
     }
 }

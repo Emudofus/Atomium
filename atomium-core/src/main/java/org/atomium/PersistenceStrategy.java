@@ -7,6 +7,9 @@ import org.atomium.entity.EntityMetadata;
  * @author blackrush
  */
 public interface PersistenceStrategy {
+    void setUp();
+    void tearDown();
+
     <T extends Entity> void create(T entity, EntityMetadata<T> metadata);
     <T extends Entity> void create(Iterable<T> entity, EntityMetadata<T> metadata);
 
