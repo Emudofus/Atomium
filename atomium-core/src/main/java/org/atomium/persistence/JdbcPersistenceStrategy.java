@@ -85,6 +85,9 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
         }
     }
 
+    /**
+     * TODO lazy computation ?
+     */
     protected <T extends Entity> NamedValues export(EntityMetadata<T> metadata, T entity, DatabaseContext ctx) {
         NamedValues values = NamedValues.simple();
 
@@ -104,7 +107,7 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     protected void setParameters(Query query, PreparedStatement statement) throws SQLException{
         int i = 1;
         for (Object parameter : query.getParameters()) {
-            statement.setObject(i++, parameter); // TODO export
+            statement.setObject(i++, parameter);
         }
     }
 
@@ -194,7 +197,8 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     @Override
     public <T extends Entity> void create(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
-            execute(dialect.insert(metadata, entity));
+            NamedValues values = export(metadata, entity, ctx);
+            execute(dialect.insert(metadata, values));
         }
         commit();
     }
@@ -212,7 +216,8 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     @Override
     public <T extends Entity> void update(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
-            execute(dialect.update(metadata, entity));
+            NamedValues values = export(metadata, entity, ctx);
+            execute(dialect.update(metadata, values));
         }
         commit();
     }
@@ -225,7 +230,8 @@ public class JdbcPersistenceStrategy implements PersistenceStrategy {
     @Override
     public <T extends Entity> void destroy(DatabaseContext ctx, EntityMetadata<T> metadata, Iterable<T> entities) {
         for (T entity : entities) {
-            execute(dialect.delete(metadata, entity));
+            NamedValues values = export(metadata, entity, ctx);
+            execute(dialect.delete(metadata, values));
         }
         commit();
     }
