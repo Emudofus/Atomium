@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.atomium</groupId>
@@ -9,15 +8,19 @@
     <packaging>pom</packaging>
 
     <name>atomium</name>
-    <url>http://github.com/Blackrush/Atomium</url>
+    <url>http://github.com/Blackrush/atomium</url>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>7</java.version>
+        <junit.version>4.10</junit.version>
+        <guava.version>14.0.1</guava.version>
+        <jodatime.version>2.2</jodatime.version>
+        <slf4j.version>1.7.5</slf4j.version>
 
-        <junit.version>4.9</junit.version>
-        <guava.version>13.0.1</guava.version>
-        <slf4j.version>1.7.2</slf4j.version>
-        <jodatime.version>2.1</jodatime.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -26,20 +29,16 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodatime.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
-        <!-- TEST SCOPE -->
 
         <dependency>
             <groupId>junit</groupId>
@@ -47,17 +46,22 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.7.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <modules>
-        <module>atomium-parent</module>
         <module>atomium-core</module>
-    </modules>
+    <module>atomium-jdbc</module>
+  </modules>
 </project>
