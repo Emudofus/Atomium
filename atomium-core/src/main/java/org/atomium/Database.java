@@ -19,6 +19,11 @@ public abstract class Database implements DatabaseInterface {
         return meta;
     }
 
+    protected <T> Metadata<T> metadataOf(T instance) {
+        @SuppressWarnings("unchecked") Class<T> target = (Class<T>) instance.getClass();
+        return metadataOf(target);
+    }
+
     @Override
     public <T> Ref<T> ref(Class<T> target, Object identifier) {
         return metadataOf(target).getPrimaryKey().getRef(identifier);
