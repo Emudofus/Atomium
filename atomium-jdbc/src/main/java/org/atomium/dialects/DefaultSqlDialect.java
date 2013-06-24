@@ -126,21 +126,6 @@ public class DefaultSqlDialect implements SqlDialectInterface {
     }
 
     @Override
-    public <T> T map(Metadata<T> meta, NamedValues values) {
-        T instance = meta.createEmpty();
-
-        for (ColumnMetadata<T> column : meta.getColumns()) {
-            ConverterInterface converter = column.getConverter();
-
-            if ((converter == null || !converter.extract(column, instance, values)) && values.has(column.getName())) {
-                column.set(instance, values.get(column.getName()));
-            }
-        }
-
-        return instance;
-    }
-
-    @Override
     public <T> SqlQuery buildStructure(Metadata<T> meta) {
         return SqlQuery.create("CREATE TABLE %s(%s);",
                 escape(meta.getTableName()),

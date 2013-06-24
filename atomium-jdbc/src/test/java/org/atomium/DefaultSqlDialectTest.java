@@ -62,18 +62,6 @@ public class DefaultSqlDialectTest {
     }
 
     @Test
-    public void testMap() throws Exception {
-        NamedValues values = NamedValues.of()
-                .set("id", 1)
-                .set("attr", "Hello World");
-
-        MyEntity instance = dialect.map(myEntity, values);
-
-        assertThat(instance.id, is(1));
-        assertThat(instance.attr, is("Hello World"));
-    }
-
-    @Test
     public void testBuildStructure() throws Exception {
         SqlQuery query = dialect.buildStructure(myEntity);
 
