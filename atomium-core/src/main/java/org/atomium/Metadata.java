@@ -177,4 +177,15 @@ public class Metadata<T> {
             throw propagate(e);
         }
     }
+
+    /**
+     * this methods will return {@code true} if the given entity is not persisted in the database (ie not created)
+     * @param instance the entity
+     * @return a boolean
+     * TODO improve the way to know if an entity is persisted or not
+     */
+    public boolean isPersisted(T instance) {
+        Object pkey = primaryKey.get(instance);
+        return pkey == null || pkey.equals(0);
+    }
 }
