@@ -1,11 +1,19 @@
 package org.atomium;
 
+import java.util.Set;
+
 /**
  * @author Blackrush
  */
 public interface DatabaseInterface extends AutoCloseable {
+    /**
+     * load any external resources used by this database service
+     */
     void load();
 
+    /**
+     * releases any external resources used by this database service
+     */
     @Override
     void close();
 
@@ -22,6 +30,27 @@ public interface DatabaseInterface extends AutoCloseable {
     MetadataRegistry getRegistry();
 
     /**
+     * create a reference to the given model by its primary key
+     * @param target entity's class
+     * @param identifier primary key's value
+     * @param <T> entity's type
+     * @return the non-null reference
+     * @throws IllegalArgumentException if {@code target} is not registered
+     */
+    <T> Ref<T> ref(Class<T> target, Object identifier);
+
+    /**
+     * create a reference to the given model by one of its column
+     * @param target entity's class
+     * @param column entity's column
+     * @param identifier column's value
+     * @param <T> entity's type
+     * @return the non-null reference
+     * @throws IllegalArgumentException if {@code target} is not registered or {@code target} hasn't any {@code column} value
+     */
+    <T> Ref<T> ref(Class<T> target, String column, Object identifier);
+
+    /**
      * find an entity by its primary key
      * @param target entity's class
      * @param identifier primary key value
@@ -29,6 +58,7 @@ public interface DatabaseInterface extends AutoCloseable {
      * @return the non-null found entity
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
+     * @throws IllegalArgumentException if {@code target} is not registered
      * @see #findOne(Ref)
      */
     <T> T findOne(Class<T> target, Object identifier);
@@ -36,15 +66,16 @@ public interface DatabaseInterface extends AutoCloseable {
     /**
      * find an entity by one of its column
      * @param target entity's class
-     * @param name column's name
+     * @param column column's name
      * @param value value
      * @param <T> entity's type
      * @return the non-null found entity
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
+     * @throws IllegalArgumentException if {@code target} is not registered or {@code target} hasn't any {@code column} value
      * @see #findOne(Ref)
      */
-    <T> T findOne(Class<T> target, String name, Object value);
+    <T> T findOne(Class<T> target, String column, Object value);
 
     /**
      * find an entity by its reference
@@ -57,4 +88,15 @@ public interface DatabaseInterface extends AutoCloseable {
      * @see Metadata#map(NamedValues)
      */
     <T> T findOne(Ref<T> ref);
+
+    /**
+     * find all entities from the database
+     * @param target entity's class
+     * @param <T> entity's type
+     * @return the non-null result set
+     * @throws DatabaseException.NotFound if there is no result
+     * @throws IllegalArgumentException if {@code target} is not registered
+     * @see DialectInterface#read(Metadata)
+     */
+    <T> Set<T> all(Class<T> target);
 }

@@ -1,5 +1,8 @@
 package org.atomium;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Blackrush
  */
@@ -10,6 +13,25 @@ public abstract class Database implements DatabaseInterface {
         this.registry = registry;
     }
 
+    protected <T> Metadata<T> metadataOf(Class<T> target) {
+        Metadata<T> meta = registry.get(target);
+        checkArgument(meta != null, "%s must be registered", target);
+        return meta;
+    }
+
+    @Override
+    public <T> Ref<T> ref(Class<T> target, Object identifier) {
+        return metadataOf(target).getPrimaryKey().getRef(identifier);
+    }
+
+    @Override
+    public <T> Ref<T> ref(Class<T> target, String column, Object identifier) {
+        ColumnMetadata<T> column0 = metadataOf(target).getColumn(column);
+        checkNotNull(column0, "can't find any column %s", column);
+
+        return column0.getRef(identifier);
+    }
+
     @Override
     public MetadataRegistry getRegistry() {
         return registry;
@@ -17,15 +39,11 @@ public abstract class Database implements DatabaseInterface {
 
     @Override
     public <T> T findOne(Class<T> target, Object identifier) {
-        Metadata<T> meta = registry.get(target);
-        Ref<T> ref = meta.getPrimaryKey().getRef(identifier);
-        return findOne(ref);
+        return findOne(ref(target, identifier));
     }
 
     @Override
     public <T> T findOne(Class<T> target, String column, Object value) {
-        Metadata<T> meta = registry.get(target);
-        ColumnMetadata<T> columnMeta = meta.getColumn(column);
-        return findOne(columnMeta.getRef(value));
+        return findOne(ref(target, column, value));
     }
 }
