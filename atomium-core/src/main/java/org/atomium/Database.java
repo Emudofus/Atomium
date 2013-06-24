@@ -16,16 +16,16 @@ public abstract class Database implements DatabaseInterface {
     }
 
     @Override
-    public <T> T find(Class<T> target, Object identifier) {
+    public <T> T findOne(Class<T> target, Object identifier) {
         Metadata<T> meta = registry.get(target);
         Ref<T> ref = meta.getPrimaryKey().getRef(identifier);
-        return find(ref);
+        return findOne(ref);
     }
 
     @Override
-    public <T> T find(Class<T> target, String column, Object value) {
+    public <T> T findOne(Class<T> target, String column, Object value) {
         Metadata<T> meta = registry.get(target);
         ColumnMetadata<T> columnMeta = meta.getColumn(column);
-        return find(columnMeta.getRef(value));
+        return findOne(columnMeta.getRef(value));
     }
 }

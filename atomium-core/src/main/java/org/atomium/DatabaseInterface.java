@@ -29,9 +29,9 @@ public interface DatabaseInterface extends AutoCloseable {
      * @return the non-null found entity
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
-     * @see #find(Ref)
+     * @see #findOne(Ref)
      */
-    <T> T find(Class<T> target, Object identifier);
+    <T> T findOne(Class<T> target, Object identifier);
 
     /**
      * find an entity by one of its column
@@ -42,9 +42,9 @@ public interface DatabaseInterface extends AutoCloseable {
      * @return the non-null found entity
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
-     * @see #find(Ref)
+     * @see #findOne(Ref)
      */
-    <T> T find(Class<T> target, String name, Object value);
+    <T> T findOne(Class<T> target, String name, Object value);
 
     /**
      * find an entity by its reference
@@ -56,5 +56,5 @@ public interface DatabaseInterface extends AutoCloseable {
      * @see DialectInterface#read(Ref)
      * @see Metadata#map(NamedValues)
      */
-    <T> T find(Ref<T> ref);
+    <T> T findOne(Ref<T> ref);
 }

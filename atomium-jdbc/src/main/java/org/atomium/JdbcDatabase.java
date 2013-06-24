@@ -65,7 +65,7 @@ public final class JdbcDatabase extends Database {
     }
 
     @Override
-    public <T> T find(Ref<T> ref) {
+    public <T> T findOne(Ref<T> ref) {
         SqlQuery query = dialect.read(ref);
 
         try (ResultSet rset = query.query(connection)) {
