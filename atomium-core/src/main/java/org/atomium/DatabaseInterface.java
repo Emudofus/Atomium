@@ -99,4 +99,28 @@ public interface DatabaseInterface extends AutoCloseable {
      * @see DialectInterface#read(Metadata)
      */
     <T> Set<T> all(Class<T> target);
+
+    /**
+     * create or update the given entity on the database
+     * set the primary key if marked as auto-generated
+     * @param instance the entity instance
+     * @param <T> the entity's type
+     */
+    <T> void persist(T instance);
+
+    /**
+     * delete the given entity from the database
+     * it will ignore this request if the given entity is not persisted
+     * @param instance the entity instance
+     * @param <T> the entity's type
+     */
+    <T> void remove(T instance);
+
+    /**
+     * delete an entity from the database by its refenrece
+     * @param ref the entity reference
+     * @param <T> the entity's type
+     * @return {@code} true if it successfully deleted the entity
+     */
+    <T> boolean remove(Ref<T> ref);
 }
