@@ -102,17 +102,27 @@ public class MetadataTest {
     }
 
     @Test
-    public void testGetProperValues() throws Exception {
-        MyEntity instance = myEntity.createEmpty();
+    public void testMapFromInstance() throws Exception {
+        MyEntity instance = new MyEntity();
+        instance.setId(1);
+        instance.setName("lel");
 
-        Object[] values = myEntity.getProperValues(instance);
-        assertThat(values.length, is(2));
-        assertThat(values[0], is((Object) 0));
-        assertThat(values[1], nullValue());
+        NamedValues values = myEntity.map(instance);
 
-        NamedValues values0 = myEntity.getProperKeyValues(instance);
-        assertThat(values0.length(), is(2));
-        assertThat(values0.get("id"), is((Object) 0));
-        assertThat(values0.get("name"), nullValue());
+        assertThat(values.length(), is(2));
+        assertThat(values.get("id"), is((Object) 1));
+        assertThat(values.get("name"), is((Object) "lel"));
+    }
+
+    @Test
+    public void testMapToInstance() throws Exception {
+        NamedValues values = NamedValues.of()
+                .set("id", 1)
+                .set("name", "lel");
+
+        MyEntity instance = myEntity.map(values);
+
+        assertThat(instance.getId(), is((Object) 1));
+        assertThat(instance.getName(), is((Object) "lel"));
     }
 }

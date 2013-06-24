@@ -54,7 +54,7 @@ public interface DatabaseInterface extends AutoCloseable {
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
      * @see DialectInterface#read(Ref)
-     * @see DialectInterface#map(Metadata, NamedValues)
+     * @see Metadata#map(NamedValues)
      */
     <T> T find(Ref<T> ref);
 }

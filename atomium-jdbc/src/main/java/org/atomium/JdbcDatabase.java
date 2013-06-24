@@ -76,7 +76,7 @@ public final class JdbcDatabase extends Database {
                 throw new DatabaseException.NonUnique();
             }
 
-            return dialect.map(ref.getEntityMetadata(), NamedValues.of(rset));
+            return ref.getEntityMetadata().map(NamedValues.of(rset));
         } catch (SQLException e) {
             throw propagate(e);
         }

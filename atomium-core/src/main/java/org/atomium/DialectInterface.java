@@ -4,14 +4,6 @@ package org.atomium;
  * @author Blackrush
  */
 public interface DialectInterface {
-    /**
-     * map a {@link NamedValues} to an instance represented by <code>meta</code>
-     * @param meta the entity's metadata used to map the {@link NamedValues}
-     * @param values the values received from the database
-     * @param <T> the entity's type
-     * @return a single non-null instance
-     */
-    <T> T map(Metadata<T> meta, NamedValues values);
 
     <T> QueryInterface buildStructure(Metadata<T> meta);
 

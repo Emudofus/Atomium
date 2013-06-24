@@ -155,7 +155,7 @@ public class DefaultSqlDialect implements SqlDialectInterface {
 
     @Override
     public <T> SqlQuery create(Metadata<T> meta, T instance) {
-        NamedValues values = meta.getProperKeyValues(instance);
+        NamedValues values = meta.map(instance);
         values.set(meta.getPrimaryKey().getName(), null); // force auto-generation
 
         return SqlQuery.create(values, "INSERT INTO %s(%s) VALUES(%s);",
@@ -184,7 +184,7 @@ public class DefaultSqlDialect implements SqlDialectInterface {
 
     @Override
     public <T> SqlQuery update(Metadata<T> meta, T instance) {
-        NamedValues values = meta.getProperKeyValues(instance);
+        NamedValues values = meta.map(instance);
         return SqlQuery.create(values, "UPDATE %s SET %s WHERE %s;",
                 escape(meta.getTableName()),
                 columnPlaceholderList(without(values.keyView(), meta.getPrimaryKey().getName())), // all columns but pkey

@@ -138,11 +138,7 @@ public class Metadata<T> {
         return tableName;
     }
 
-    public Object[] getProperValues(T instance) {
-        return getProperKeyValues(instance).valueView().toArray();
-    }
-
-    public NamedValues getProperKeyValues(T instance) {
+    public NamedValues map(T instance) {
         NamedValues values = NamedValues.of();
 
         for (ColumnMetadata<T> column : columns.values()) {
@@ -154,6 +150,20 @@ public class Metadata<T> {
         }
 
         return values;
+    }
+
+    public T map(NamedValues values) {
+        T instance = createEmpty();
+
+        for (ColumnMetadata<T> column : columns.values()) {
+            ConverterInterface converter = column.getConverter();
+
+            if (converter == null || !converter.extract(column, instance, values)) {
+                column.set(instance, values.get(column.getName()));
+            }
+        }
+
+        return instance;
     }
 
     public ColumnMetadata<T> getPrimaryKey() {
