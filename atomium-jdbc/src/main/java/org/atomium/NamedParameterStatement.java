@@ -339,4 +339,15 @@ public final class NamedParameterStatement {
             throw propagate(e);
         }
     }
+
+    /**
+     * @see java.sql.PreparedStatement#getGeneratedKeys()
+     */
+    public ResultSet getGeneratedKeys() {
+        try {
+            return statement.getGeneratedKeys();
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
 }
