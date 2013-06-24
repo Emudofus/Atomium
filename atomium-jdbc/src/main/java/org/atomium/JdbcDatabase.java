@@ -1,6 +1,7 @@
 package org.atomium;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Primitives;
 import org.atomium.converters.JodaConverter;
 import org.atomium.dialects.SqlDialects;
 
@@ -84,9 +85,10 @@ public final class JdbcDatabase extends Database {
             if (!rset.next()) {
                 throw new DatabaseException.NotFound(ref);
             }
-            if (!rset.isLast()) {
-                throw new DatabaseException.NonUnique();
-            }
+            // TODO compat with sqlite JDBC driver
+            //if (!rset.isLast()) {
+            //    throw new DatabaseException.NonUnique();
+            //}
 
             return ref.getEntityMetadata().map(NamedValues.of(rset));
         } catch (SQLException e) {
@@ -100,9 +102,10 @@ public final class JdbcDatabase extends Database {
         SqlQuery query = dialect.read(meta);
 
         try (ResultSet rset = query.query(connection)) {
-            if (!rset.isAfterLast()) {
-                throw new DatabaseException.NotFound("can't find any data");
-            }
+            // TODO compat with sqlite JDBC driver
+            //if (!rset.isAfterLast()) {
+            //    throw new DatabaseException.NotFound("can't find any data");
+            //}
 
             NamedValues values = NamedValues.of(rset);
             ImmutableSet.Builder<T> builder = ImmutableSet.builder();
@@ -143,7 +146,12 @@ public final class JdbcDatabase extends Database {
         }
 
         dialect.delete(meta, instance).execute(connection);
-        meta.getPrimaryKey().set(instance, null); // marks instance as not persisted
+        // marks instance as not persisted TODO improve the way to mark the entity persisted or not
+        if (Primitives.allPrimitiveTypes().contains(meta.getPrimaryKey().getTarget().getRawType())) {
+            meta.getPrimaryKey().set(instance, 0);
+        } else {
+            meta.getPrimaryKey().set(instance, null);
+        }
     }
 
     @Override

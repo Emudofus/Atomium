@@ -186,6 +186,6 @@ public class Metadata<T> {
      */
     public boolean isPersisted(T instance) {
         Object pkey = primaryKey.get(instance);
-        return pkey == null || pkey.equals(0);
+        return pkey != null && !pkey.equals(0);
     }
 }
