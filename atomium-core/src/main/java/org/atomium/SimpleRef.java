@@ -1,5 +1,7 @@
 package org.atomium;
 
+import org.atomium.metadata.ColumnMetadata;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

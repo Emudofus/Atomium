@@ -1,6 +1,10 @@
 package org.atomium;
 
+import org.atomium.annotations.Column;
+import org.atomium.annotations.PrimaryKey;
 import org.atomium.dialects.DefaultSqlDialect;
+import org.atomium.metadata.Metadata;
+import org.atomium.metadata.SimpleMetadataRegistry;
 import org.junit.*;
 
 import java.sql.Connection;
@@ -15,7 +19,7 @@ import static org.junit.Assert.assertThat;
  */
 public class DefaultSqlDialectTest {
     @SuppressWarnings("UnusedDeclaration")
-    static final class MyEntity {
+    public static final class MyEntity {
         private int id;
         private String attr;
 

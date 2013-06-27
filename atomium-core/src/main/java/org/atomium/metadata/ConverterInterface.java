@@ -1,4 +1,7 @@
-package org.atomium;
+package org.atomium.metadata;
+
+import org.atomium.NamedValues;
+import org.atomium.metadata.ColumnMetadata;
 
 /**
  * @author Blackrush

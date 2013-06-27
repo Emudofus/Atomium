@@ -1,4 +1,4 @@
-package org.atomium;
+package org.atomium.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,5 +1,9 @@
 package org.atomium;
 
+import org.atomium.metadata.ColumnMetadata;
+import org.atomium.metadata.Metadata;
+import org.atomium.metadata.MetadataRegistry;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,8 +24,9 @@ public abstract class Database implements DatabaseInterface {
     }
 
     protected <T> Metadata<T> metadataOf(T instance) {
-        @SuppressWarnings("unchecked") Class<T> target = (Class<T>) instance.getClass();
-        return metadataOf(target);
+        Metadata<T> meta = registry.get(instance);
+        checkArgument(meta != null, "%s must be registered", instance.getClass());
+        return meta;
     }
 
     @Override

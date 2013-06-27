@@ -1,4 +1,8 @@
-package org.atomium;
+package org.atomium.annotations;
+
+import org.atomium.metadata.ColumnMetadata;
+import org.atomium.metadata.ConverterInterface;
+import org.atomium.NamedValues;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

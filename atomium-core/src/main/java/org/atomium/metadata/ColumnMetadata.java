@@ -1,6 +1,8 @@
-package org.atomium;
+package org.atomium.metadata;
 
 import com.google.common.reflect.TypeToken;
+import org.atomium.Ref;
+import org.atomium.SimpleRef;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,7 +45,7 @@ public abstract class ColumnMetadata<T> {
     public abstract boolean isNullable();
 
     /**
-     * get the {@link MetadataRegistry} that contains this column's parent
+     * get the {@link org.atomium.metadata.MetadataRegistry} that contains this column's parent
      * @return the non-null parent's registry
      */
     public MetadataRegistry getRegistry() {

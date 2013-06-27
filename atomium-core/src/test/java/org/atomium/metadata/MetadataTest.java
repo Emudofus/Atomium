@@ -1,5 +1,12 @@
-package org.atomium;
+package org.atomium.metadata;
 
+import org.atomium.NamedValues;
+import org.atomium.annotations.Column;
+import org.atomium.annotations.PrimaryKey;
+import org.atomium.annotations.Table;
+import org.atomium.metadata.Metadata;
+import org.atomium.metadata.MetadataRegistry;
+import org.atomium.metadata.SimpleMetadataRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

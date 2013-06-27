@@ -1,6 +1,9 @@
 package org.atomium;
 
+import org.atomium.annotations.Column;
+import org.atomium.annotations.PrimaryKey;
 import org.atomium.dialects.SqlDialects;
+import org.atomium.metadata.SimpleMetadataRegistry;
 import org.junit.*;
 
 import java.sql.Connection;

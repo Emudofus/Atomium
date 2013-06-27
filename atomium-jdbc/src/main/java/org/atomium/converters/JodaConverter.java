@@ -1,9 +1,9 @@
 package org.atomium.converters;
 
 import com.google.common.reflect.TypeToken;
-import org.atomium.ColumnMetadata;
-import org.atomium.ConverterInterface;
-import org.atomium.ConverterProvider;
+import org.atomium.metadata.ColumnMetadata;
+import org.atomium.metadata.ConverterInterface;
+import org.atomium.metadata.ConverterProvider;
 import org.atomium.NamedValues;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;

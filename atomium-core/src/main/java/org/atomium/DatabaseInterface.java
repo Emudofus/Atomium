@@ -1,5 +1,7 @@
 package org.atomium;
 
+import org.atomium.metadata.MetadataRegistry;
+
 import java.util.Set;
 
 /**
@@ -24,7 +26,7 @@ public interface DatabaseInterface extends AutoCloseable {
     DialectInterface getDialect();
 
     /**
-     * get the {@link MetadataRegistry} used to store the metadata
+     * get the {@link org.atomium.metadata.MetadataRegistry} used to store the metadata
      * @return the non-null registry
      */
     MetadataRegistry getRegistry();
@@ -85,7 +87,7 @@ public interface DatabaseInterface extends AutoCloseable {
      * @throws DatabaseException.NotFound if there is no result
      * @throws DatabaseException.NonUnique if there are more than one result
      * @see DialectInterface#read(Ref)
-     * @see Metadata#map(NamedValues)
+     * @see org.atomium.metadata.Metadata#map(NamedValues)
      */
     <T> T findOne(Ref<T> ref);
 
@@ -96,7 +98,7 @@ public interface DatabaseInterface extends AutoCloseable {
      * @return the non-null result set
      * @throws DatabaseException.NotFound if there is no result
      * @throws IllegalArgumentException if {@code target} is not registered
-     * @see DialectInterface#read(Metadata)
+     * @see DialectInterface#read(org.atomium.metadata.Metadata)
      */
     <T> Set<T> all(Class<T> target);
 

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Primitives;
 import org.atomium.converters.JodaConverter;
 import org.atomium.dialects.SqlDialects;
+import org.atomium.metadata.Metadata;
+import org.atomium.metadata.MetadataRegistry;
 
 import java.sql.*;
 import java.util.Set;

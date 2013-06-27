@@ -1,4 +1,4 @@
-package org.atomium;
+package org.atomium.metadata;
 
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;

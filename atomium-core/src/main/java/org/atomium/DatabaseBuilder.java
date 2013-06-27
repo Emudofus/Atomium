@@ -1,6 +1,8 @@
 package org.atomium;
 
 import com.google.common.collect.Maps;
+import org.atomium.metadata.MetadataRegistry;
+import org.atomium.metadata.SimpleMetadataRegistry;
 
 import java.util.Map;
 

@@ -1,7 +1,10 @@
-package org.atomium;
+package org.atomium.metadata;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import org.atomium.*;
+import org.atomium.annotations.Column;
+import org.atomium.annotations.Table;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

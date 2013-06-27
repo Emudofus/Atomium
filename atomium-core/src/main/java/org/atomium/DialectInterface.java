@@ -1,5 +1,7 @@
 package org.atomium;
 
+import org.atomium.metadata.Metadata;
+
 /**
  * @author Blackrush
  */

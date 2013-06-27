@@ -3,6 +3,8 @@ package org.atomium.dialects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.atomium.*;
+import org.atomium.metadata.ColumnMetadata;
+import org.atomium.metadata.Metadata;
 
 import java.util.Set;
 
