@@ -41,4 +41,26 @@ public abstract class MetadataRegistry {
      * @return the metadata or null if no metadata for that class is registered
      */
     public abstract <T> Metadata<T> get(Class<? extends T> target);
+
+    /**
+     * get the {@link Metadata} by its {@link Class} according to {@code T}
+     * @param instance the entity
+     * @param <T> entity's type
+     * @return the metadata or null if no metadata for that class is registered
+     */
+    public abstract <T> Metadata<T> get(T instance);
+
+    /**
+     * add a {@link InstantiationListener} to this registry that will listen all entity instantation
+     * @param listener the non-null listener
+     * @return {@code true} if you successfully add a listen, {@code false} otherwise
+     */
+    public abstract boolean addInstantationListener(InstantiationListener listener);
+
+    /**
+     * propagate instantiation event to all registered listeners
+     * @param instance the non-null entity
+     * @param <T> the entity's type
+     */
+    public abstract <T> void onInstantiated(T instance);
 }

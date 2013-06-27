@@ -156,7 +156,7 @@ public class Metadata<T> {
     }
 
     public T map(NamedValues values) {
-        T instance = createEmpty();
+        T instance = newEmpty();
 
         for (ColumnMetadata<T> column : columns.values()) {
             ConverterInterface converter = column.getConverter();
@@ -166,6 +166,8 @@ public class Metadata<T> {
             }
         }
 
+        registry.onInstantiated(instance);
+
         return instance;
     }
 
@@ -173,12 +175,18 @@ public class Metadata<T> {
         return primaryKey;
     }
 
-    public T createEmpty() {
+    protected T newEmpty() {
         try {
             return target.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw propagate(e);
         }
+    }
+
+    public T createEmpty() {
+        T instance = newEmpty();
+        registry.onInstantiated(instance);
+        return instance;
     }
 
     /**
