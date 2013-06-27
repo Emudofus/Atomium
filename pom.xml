@@ -62,6 +62,7 @@
 
     <modules>
         <module>atomium-core</module>
-    <module>atomium-jdbc</module>
-  </modules>
+        <module>atomium-jdbc</module>
+        <module>atomium-guice</module>
+    </modules>
 </project>
