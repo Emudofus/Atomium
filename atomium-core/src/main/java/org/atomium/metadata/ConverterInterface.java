@@ -1,7 +1,6 @@
 package org.atomium.metadata;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import org.atomium.NamedValues;
 
 /**
@@ -14,17 +13,7 @@ public interface ConverterInterface {
      */
     void setMetadataRegistry(MetadataRegistry registry);
 
-    /**
-     * get the {@link TypeToken}s that this instance can extract
-     * @return a non-null and non-empty immutable set of {@link TypeToken}
-     */
-    ImmutableSet<TypeToken<?>> getExtracted();
-
-    /**
-     * get the {@link TypeToken}s that this instance can export
-     * @return a non-null and non-empty immutable set of {@link TypeToken}
-     */
-    ImmutableSet<TypeToken<?>> getExported();
+    ConverterMatcher getMatcher();
 
     /**
      * get the {@link ColumnInfo}s that this converter has to create to work
@@ -68,12 +57,7 @@ public interface ConverterInterface {
         }
 
         @Override
-        public ImmutableSet<TypeToken<?>> getExtracted() {
-            throw new IllegalAccessError();
-        }
-
-        @Override
-        public ImmutableSet<TypeToken<?>> getExported() {
+        public ConverterMatcher getMatcher() {
             throw new IllegalAccessError();
         }
 

@@ -1,7 +1,5 @@
 package org.atomium.metadata;
 
-import com.google.common.reflect.TypeToken;
-
 /**
  * @author Blackrush
  */
@@ -14,18 +12,11 @@ public abstract class MetadataRegistry {
     public abstract void register(ConverterInterface converter);
 
     /**
-     * get a converter that can extract values of given type in argument
-     * @param extracted the type
-     * @return a new converter instance or null if there are no registered converter for that type
+     * get a converter that can extract values of the given column in argument
+     * @param column the column
+     * @return the {@link ConverterInterface} instance or null if none match the given column
      */
-    public abstract ConverterInterface getConverterFor(TypeToken<?> extracted);
-
-    /**
-     * get a converter that can export values of given type in argument
-     * @param exported the type
-     * @return a new converter instance or null if there are no registered converter for that type
-     */
-    public abstract ConverterInterface getConverterFrom(TypeToken<?> exported);
+    public abstract <T> ConverterInterface getConverter(ColumnMetadata<T> column);
 
     /**
      * register a {@link Metadata} by a {@link Class}

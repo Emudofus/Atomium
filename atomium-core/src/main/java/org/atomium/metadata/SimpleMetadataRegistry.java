@@ -2,7 +2,6 @@ package org.atomium.metadata;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,33 +14,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SimpleMetadataRegistry extends MetadataRegistry {
     private final Map<Class<?>, Metadata<?>> metas = Maps.newIdentityHashMap();
-    private final Map<TypeToken<?>, ConverterInterface> providersFor = Maps.newHashMap(), providersFrom = Maps.newHashMap();
+    private final Set<ConverterInterface> converters = Sets.newHashSet();
     private final Set<InstantiationListener> listeners = Sets.newHashSet();
 
     @Override
     public void register(ConverterInterface converter) {
-        checkNotNull(converter);
-
-        for (TypeToken<?> exported : converter.getExported()) {
-            if (providersFor.containsKey(exported)) continue;
-            providersFor.put(exported, converter);
-        }
-        for (TypeToken<?> extracted : converter.getExtracted()) {
-            if (providersFrom.containsKey(extracted)) continue;
-            providersFrom.put(extracted, converter);
-        }
-
+        converters.add(checkNotNull(converter));
         converter.setMetadataRegistry(this);
     }
 
     @Override
-    public ConverterInterface getConverterFor(TypeToken<?> extracted) {
-        return providersFor.get(extracted);
-    }
-
-    @Override
-    public ConverterInterface getConverterFrom(TypeToken<?> exported) {
-        return providersFrom.get(exported);
+    public <T> ConverterInterface getConverter(ColumnMetadata<T> column) {
+        for (ConverterInterface converter : converters) {
+            if (converter.getMatcher().matches(column)) {
+                return converter;
+            }
+        }
+        return null;
     }
 
     @Override

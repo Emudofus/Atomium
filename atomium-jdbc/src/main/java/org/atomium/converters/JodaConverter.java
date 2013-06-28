@@ -1,12 +1,8 @@
 package org.atomium.converters;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import org.atomium.NamedValues;
-import org.atomium.metadata.ColumnInfo;
-import org.atomium.metadata.ColumnMetadata;
-import org.atomium.metadata.ConverterInterface;
-import org.atomium.metadata.MetadataRegistry;
+import org.atomium.metadata.*;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 
@@ -25,19 +21,8 @@ public final class JodaConverter implements ConverterInterface {
     }
 
     @Override
-    public ImmutableSet<TypeToken<?>> getExtracted() {
-        return ImmutableSet.<TypeToken<?>>builder()
-                .add(of(DateTime.class))
-                .add(of(Instant.class))
-                .build();
-    }
-
-    @Override
-    public ImmutableSet<TypeToken<?>> getExported() {
-        return ImmutableSet.<TypeToken<?>>builder()
-                .add(of(Date.class))
-                .add(of(Timestamp.class))
-                .build();
+    public ConverterMatcher getMatcher() {
+        return ConverterMatchers.withTarget(of(DateTime.class), of(Instant.class));
     }
 
     @Override
