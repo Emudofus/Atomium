@@ -1,8 +1,11 @@
 package org.atomium;
 
+import com.google.common.collect.Maps;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.Metadata;
 import org.atomium.metadata.MetadataRegistry;
+
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -11,6 +14,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Blackrush
  */
 public abstract class Database implements DatabaseInterface {
+    private static final Map<String, DatabaseProvider> providers = Maps.newHashMap();
+
+    public static void register(String urlRegex, DatabaseProvider provider) {
+        providers.put(urlRegex, provider);
+    }
+
+    public static DatabaseProvider forUrl(String url) {
+        for (Map.Entry<String, DatabaseProvider> entry : providers.entrySet()) {
+            if (url.matches(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
     private final MetadataRegistry registry;
 
     protected Database(MetadataRegistry registry) {

@@ -31,7 +31,7 @@ public final class JdbcDatabase extends Database {
     };
 
     static {
-        DatabaseBuilder.register("^jdbc:.+", PROVIDER);
+        Database.register("^jdbc:.+", PROVIDER);
     }
 
     private final Connection connection;
