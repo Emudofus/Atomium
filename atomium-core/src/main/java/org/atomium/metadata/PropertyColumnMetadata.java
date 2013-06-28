@@ -24,9 +24,9 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
     }
 
     @Override
-    public Object get(T entity) {
+    public Object get(T instance) {
         try {
-            return getter.invoke(entity);
+            return getter.invoke(instance);
         } catch (IllegalAccessException e) {
             throw propagate(e);
         } catch (InvocationTargetException e) {
@@ -35,9 +35,9 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
     }
 
     @Override
-    public void set(T entity, Object o) {
+    public void set(T instance, Object o) {
         try {
-            setter.invoke(entity, o);
+            setter.invoke(instance, o);
         } catch (IllegalAccessException e) {
             throw propagate(e);
         } catch (InvocationTargetException e) {

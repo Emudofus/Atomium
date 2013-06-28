@@ -36,14 +36,26 @@ public class Metadata<T> {
         this.target = target;
     }
 
+    /**
+     * gets the {@link MetadataRegistry} where this met
+     * @return
+     */
     public MetadataRegistry getRegistry() {
         return registry;
     }
 
+    /**
+     *
+     * @return
+     */
     public Class<T> getTarget() {
         return target;
     }
 
+    /**
+     *
+     * @return
+     */
     public BeanInfo getBeanInfo() {
         try {
             return Introspector.getBeanInfo(target);
@@ -52,6 +64,9 @@ public class Metadata<T> {
         }
     }
 
+    /**
+     * dome some back-end operations
+     */
     public void load() {
         checkState(!loaded, "this metadata is already loaded");
 
@@ -141,6 +156,11 @@ public class Metadata<T> {
         return tableName;
     }
 
+    /**
+     *
+     * @param instance
+     * @return
+     */
     public NamedValues map(T instance) {
         NamedValues values = NamedValues.of();
 
@@ -155,6 +175,11 @@ public class Metadata<T> {
         return values;
     }
 
+    /**
+     *
+     * @param values
+     * @return
+     */
     public T map(NamedValues values) {
         T instance = newEmpty();
 
@@ -171,6 +196,10 @@ public class Metadata<T> {
         return instance;
     }
 
+    /**
+     *
+     * @return
+     */
     public ColumnMetadata<T> getPrimaryKey() {
         return primaryKey;
     }
@@ -183,6 +212,10 @@ public class Metadata<T> {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public T createEmpty() {
         T instance = newEmpty();
         registry.onInstantiated(instance);

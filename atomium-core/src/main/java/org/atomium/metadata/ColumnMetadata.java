@@ -33,20 +33,46 @@ public abstract class ColumnMetadata<T> implements ColumnInfo {
         return parent.getRegistry();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * get the {@link ConverterInterface} that can handle this column
+     * @return a nullable {@link ConverterInterface}
+     */
     public ConverterInterface getConverter() {
         return getRegistry().getConverterFor(getTarget());
     }
 
+    /**
+     * do some back-end operations
+     */
     public abstract void load();
 
-    public abstract Object get(T entity);
-    public abstract void set(T entity, Object o);
+    /**
+     * gets column's value of the given instance
+     * @param instance the non-null instance
+     * @return the nullable value
+     */
+    public abstract Object get(T instance);
 
+    /**
+     * sets column's value of the given instance
+     * @param instance the non-null instance
+     * @param o the nullable value
+     */
+    public abstract void set(T instance, Object o);
+
+    /**
+     * creates a new {@link Ref} bound to this column with the given identifier
+     * @param identifier the identifier
+     * @return a non-null {@link Ref}
+     */
     public Ref<T> getRef(Object identifier) {
         return new SimpleRef<>(this, identifier);
     }

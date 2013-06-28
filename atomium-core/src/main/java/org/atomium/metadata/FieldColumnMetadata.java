@@ -23,18 +23,18 @@ public class FieldColumnMetadata<T> extends ColumnMetadata<T> {
     }
 
     @Override
-    public Object get(T entity) {
+    public Object get(T instance) {
         try {
-            return field.get(entity);
+            return field.get(instance);
         } catch (IllegalAccessException e) {
             throw propagate(e);
         }
     }
 
     @Override
-    public void set(T entity, Object o) {
+    public void set(T instance, Object o) {
         try {
-            field.set(entity, o);
+            field.set(instance, o);
         } catch (IllegalAccessException e) {
             throw propagate(e);
         }
