@@ -1,5 +1,6 @@
 package org.atomium.metadata;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import org.atomium.NamedValues;
 
@@ -14,16 +15,24 @@ public interface ConverterInterface {
     void setMetadataRegistry(MetadataRegistry registry);
 
     /**
-     * returns the {@link TypeToken} that this instance can extract
-     * @return a non-null and non-empty array of {@link TypeToken}
+     * get the {@link TypeToken}s that this instance can extract
+     * @return a non-null and non-empty immutable set of {@link TypeToken}
      */
-    TypeToken<?>[] getExtracted();
+    ImmutableSet<TypeToken<?>> getExtracted();
 
     /**
-     * returns the {@link TypeToken} that this instance can export
-     * @return a non-null and non-empty array of {@link TypeToken}
+     * get the {@link TypeToken}s that this instance can export
+     * @return a non-null and non-empty immutable set of {@link TypeToken}
      */
-    TypeToken<?>[] getExported();
+    ImmutableSet<TypeToken<?>> getExported();
+
+    /**
+     * get the {@link ColumnInfo}s that this converter has to create to work
+     * @param column the column that has to be created
+     * @param <T> the model's type
+     * @return a non-null and non-empty immutable set of {@link ColumnInfo}
+     */
+    <T> ImmutableSet<ColumnInfo> getBuiltStructure(ColumnMetadata<T> column);
 
     /**
      * this method will extract values from the database and convert it to the proper type
@@ -59,12 +68,17 @@ public interface ConverterInterface {
         }
 
         @Override
-        public TypeToken<?>[] getExtracted() {
+        public ImmutableSet<TypeToken<?>> getExtracted() {
             throw new IllegalAccessError();
         }
 
         @Override
-        public TypeToken<?>[] getExported() {
+        public ImmutableSet<TypeToken<?>> getExported() {
+            throw new IllegalAccessError();
+        }
+
+        @Override
+        public <T> ImmutableSet<ColumnInfo> getBuiltStructure(ColumnMetadata<T> column) {
             throw new IllegalAccessError();
         }
 

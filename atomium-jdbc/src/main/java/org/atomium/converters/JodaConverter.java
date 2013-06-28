@@ -1,7 +1,9 @@
 package org.atomium.converters;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import org.atomium.NamedValues;
+import org.atomium.metadata.ColumnInfo;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.ConverterInterface;
 import org.atomium.metadata.MetadataRegistry;
@@ -23,17 +25,28 @@ public final class JodaConverter implements ConverterInterface {
     }
 
     @Override
-    public TypeToken<?>[] getExtracted() {
-        return new TypeToken<?>[]{of(DateTime.class), of(Instant.class)};
+    public ImmutableSet<TypeToken<?>> getExtracted() {
+        return ImmutableSet.<TypeToken<?>>builder()
+                .add(of(DateTime.class))
+                .add(of(Instant.class))
+                .build();
     }
 
     @Override
-    public TypeToken<?>[] getExported() {
-        return new TypeToken<?>[]{of(Date.class), of(Timestamp.class)};
+    public ImmutableSet<TypeToken<?>> getExported() {
+        return ImmutableSet.<TypeToken<?>>builder()
+                .add(of(Date.class))
+                .add(of(Timestamp.class))
+                .build();
     }
 
     @Override
-    public <T> boolean extract(ColumnMetadata<T> column, T instance, NamedValues input) {
+    public <T> ImmutableSet<ColumnInfo> getBuiltStructure(ColumnMetadata<T> column) {
+        return ImmutableSet.of(column.asColumnInfo());
+    }
+
+    @Override
+    public <T> boolean extract(ColumnMetadata <T> column, T instance, NamedValues input) {
         Object o = input.get(column.getName());
 
         if (o instanceof Date) {
