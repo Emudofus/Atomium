@@ -1,8 +1,6 @@
 package org.atomium.annotations;
 
-import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.ConverterInterface;
-import org.atomium.NamedValues;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,19 +15,7 @@ import java.lang.annotation.Target;
 public @interface Column {
     static final String DEFAULT = "/!\\ NEVER USE THIS STRING /!\\";
 
-    static final class DEFAULT implements ConverterInterface {
-        private DEFAULT() {
-            throw new IllegalAccessError();
-        }
-        public <T> boolean extract(ColumnMetadata<T> column, T instance, NamedValues input) {
-            throw new IllegalAccessError();
-        }
-        public <T> boolean export(ColumnMetadata<T> column, T instance, NamedValues output) {
-            throw new IllegalAccessError();
-        }
-    }
-
     String value() default DEFAULT;
-    Class<? extends ConverterInterface> converter() default DEFAULT.class;
+    Class<? extends ConverterInterface> converter() default ConverterInterface.Invalid.class;
     boolean nullable() default false;
 }

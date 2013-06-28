@@ -1,10 +1,10 @@
 package org.atomium.converters;
 
 import com.google.common.reflect.TypeToken;
+import org.atomium.NamedValues;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.ConverterInterface;
-import org.atomium.metadata.ConverterProvider;
-import org.atomium.NamedValues;
+import org.atomium.metadata.MetadataRegistry;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 
@@ -17,22 +17,20 @@ import static com.google.common.reflect.TypeToken.of;
  * @author Blackrush
  */
 public final class JodaConverter implements ConverterInterface {
-    public static final ConverterProvider PROVIDER = new ConverterProvider() {
-        @Override
-        public TypeToken<?>[] getExtracted() {
-            return new TypeToken<?>[]{of(DateTime.class), of(Instant.class)};
-        }
+    @Override
+    public void setMetadataRegistry(MetadataRegistry registry) {
+        // ignore
+    }
 
-        @Override
-        public TypeToken<?>[] getExported() {
-            return new TypeToken<?>[]{of(Date.class), of(Timestamp.class)};
-        }
+    @Override
+    public TypeToken<?>[] getExtracted() {
+        return new TypeToken<?>[]{of(DateTime.class), of(Instant.class)};
+    }
 
-        @Override
-        public ConverterInterface get() {
-            return new JodaConverter();
-        }
-    };
+    @Override
+    public TypeToken<?>[] getExported() {
+        return new TypeToken<?>[]{of(Date.class), of(Timestamp.class)};
+    }
 
     @Override
     public <T> boolean extract(ColumnMetadata<T> column, T instance, NamedValues input) {

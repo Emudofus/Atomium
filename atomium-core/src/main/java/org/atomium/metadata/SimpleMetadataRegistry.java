@@ -15,35 +15,33 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SimpleMetadataRegistry extends MetadataRegistry {
     private final Map<Class<?>, Metadata<?>> metas = Maps.newIdentityHashMap();
-    private final Map<TypeToken<?>, ConverterProvider> providersFor = Maps.newHashMap(), providersFrom = Maps.newHashMap();
+    private final Map<TypeToken<?>, ConverterInterface> providersFor = Maps.newHashMap(), providersFrom = Maps.newHashMap();
     private final Set<InstantiationListener> listeners = Sets.newHashSet();
 
     @Override
-    public void register(ConverterProvider provider) {
-        for (TypeToken<?> exported : provider.getExported()) {
+    public void register(ConverterInterface converter) {
+        checkNotNull(converter);
+
+        for (TypeToken<?> exported : converter.getExported()) {
             if (providersFor.containsKey(exported)) continue;
-            providersFor.put(exported, provider);
+            providersFor.put(exported, converter);
         }
-        for (TypeToken<?> extracted : provider.getExtracted()) {
+        for (TypeToken<?> extracted : converter.getExtracted()) {
             if (providersFrom.containsKey(extracted)) continue;
-            providersFrom.put(extracted, provider);
+            providersFrom.put(extracted, converter);
         }
+
+        converter.setMetadataRegistry(this);
     }
 
     @Override
     public ConverterInterface getConverterFor(TypeToken<?> extracted) {
-        ConverterProvider provider = providersFor.get(extracted);
-        return provider != null ?
-                provider.get() :
-                null;
+        return providersFor.get(extracted);
     }
 
     @Override
     public ConverterInterface getConverterFrom(TypeToken<?> exported) {
-        ConverterProvider provider = providersFrom.get(exported);
-        return provider != null ?
-                provider.get() :
-                null;
+        return providersFrom.get(exported);
     }
 
     @Override

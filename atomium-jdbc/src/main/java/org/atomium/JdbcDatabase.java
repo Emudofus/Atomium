@@ -49,7 +49,7 @@ public final class JdbcDatabase extends Database {
 
     @Override
     public void load() {
-        getRegistry().register(JodaConverter.PROVIDER);
+        getRegistry().register(new JodaConverter());
     }
 
     @Override

@@ -7,11 +7,11 @@ import com.google.common.reflect.TypeToken;
  */
 public abstract class MetadataRegistry {
     /**
-     * register a {@link ConverterInterface} by a {@link ConverterProvider}
-     * @param provider the {@link ConverterInterface} provider
-     * @see {@link ConverterProvider}
+     * register a {@link ConverterInterface}
+     * @param converter the non-null {@link ConverterInterface} instance
+     * @see {@link ConverterInterface}
      */
-    public abstract void register(ConverterProvider provider);
+    public abstract void register(ConverterInterface converter);
 
     /**
      * get a converter that can extract values of given type in argument
