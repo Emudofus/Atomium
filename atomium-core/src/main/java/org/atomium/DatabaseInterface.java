@@ -1,5 +1,6 @@
 package org.atomium;
 
+import org.atomium.criterias.CriteriaInterface;
 import org.atomium.metadata.MetadataRegistry;
 
 import java.util.Set;
@@ -101,6 +102,31 @@ public interface DatabaseInterface extends AutoCloseable {
      * @see DialectInterface#read(org.atomium.metadata.Metadata)
      */
     <T> Set<T> all(Class<T> target);
+
+    /**
+     * find entities from the database according to the given criteria
+     * @param target entity's class
+     * @param criteria the non-null criteria
+     * @param <T> entity's type
+     * @return the non-null result set
+     * @throws DatabaseException.NotFound if there is no result
+     * @throws IllegalArgumentException if {@code target} is not registered
+     * @see DialectInterface#read(org.atomium.metadata.Metadata, org.atomium.criterias.CriteriaInterface)
+     */
+    <T> Set<T> find(Class<T> target, CriteriaInterface criteria);
+
+    /**
+     * find entities from the database according to the given column name and value
+     * @param target entity's class
+     * @param columnName column name
+     * @param columnValue column value
+     * @param <T> entity's type
+     * @return the non-null result set
+     * @throws DatabaseException.NotFound if there is no result
+     * @throws IllegalArgumentException if {@code target} is not registered
+     * @see DatabaseInterface#find(Class, org.atomium.criterias.CriteriaInterface)
+     */
+    <T> Set<T> find(Class<T> target, String columnName, Object columnValue);
 
     /**
      * create or update the given entity on the database

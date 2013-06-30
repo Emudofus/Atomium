@@ -2,10 +2,15 @@ package org.atomium;
 
 import org.atomium.annotations.Column;
 import org.atomium.annotations.PrimaryKey;
+import org.atomium.criterias.CriteriaInterface;
+import org.atomium.criterias.Criterias;
 import org.atomium.dialects.DefaultSqlDialect;
 import org.atomium.metadata.Metadata;
 import org.atomium.metadata.SimpleMetadataRegistry;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -91,6 +96,14 @@ public class DefaultSqlDialectTest {
     public void testRead() throws Exception {
         SqlQuery query = dialect.read(myEntity);
         assertThat(query.getCommand(), is("SELECT `id`, `attr` FROM `myEntity`;"));
+        assertThat(query.getBoundValues().length(), is(0));
+    }
+
+    @Test
+    public void testReadCriteria() throws Exception {
+        CriteriaInterface criteria = Criterias.equal(Criterias.identifier("attr"), Criterias.value("lel"));
+        SqlQuery query = dialect.read(myEntity, criteria);
+        assertThat(query.getCommand(), is("SELECT `id`, `attr` FROM `myEntity` WHERE `attr`='lel';"));
         assertThat(query.getBoundValues().length(), is(0));
     }
 

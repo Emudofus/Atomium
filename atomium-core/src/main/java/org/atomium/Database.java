@@ -1,11 +1,14 @@
 package org.atomium;
 
 import com.google.common.collect.Maps;
+import org.atomium.criterias.CriteriaInterface;
+import org.atomium.criterias.Criterias;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.Metadata;
 import org.atomium.metadata.MetadataRegistry;
 
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,6 +50,13 @@ public abstract class Database implements DatabaseInterface {
         return meta;
     }
 
+    protected <T> CriteriaInterface createCriteria(ColumnMetadata<T> column, Object value) {
+        CriteriaInterface left = Criterias.identifier(column.getName()),
+                          right = Criterias.value(value);
+
+        return Criterias.equal(left, right);
+    }
+
     @Override
     public <T> Ref<T> ref(Class<T> target, Object identifier) {
         return metadataOf(target).getPrimaryKey().getRef(identifier);
@@ -73,5 +83,15 @@ public abstract class Database implements DatabaseInterface {
     @Override
     public <T> T findOne(Class<T> target, String column, Object value) {
         return findOne(ref(target, column, value));
+    }
+
+    @Override
+    public <T> Set<T> find(Class<T> target, String columnName, Object columnValue) {
+        ColumnMetadata<T> column = metadataOf(target).getColumn(columnName);
+        checkArgument(column != null, "unknown column %s on %s", columnName, target.getName());
+
+        CriteriaInterface criteria = createCriteria(column, columnValue);
+
+        return find(target, criteria);
     }
 }

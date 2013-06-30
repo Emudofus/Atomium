@@ -3,6 +3,7 @@ package org.atomium;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Primitives;
 import org.atomium.converters.JodaConverter;
+import org.atomium.criterias.CriteriaInterface;
 import org.atomium.dialects.SqlDialects;
 import org.atomium.metadata.Metadata;
 import org.atomium.metadata.MetadataRegistry;
@@ -79,6 +80,22 @@ public final class JdbcDatabase extends Database {
         }
     }
 
+    private <T> Set<T> mapMany(Metadata<T> meta, SqlQuery query) {
+        try (ResultSet rset = query.query(connection)) {
+            NamedValues values = NamedValues.of(rset);
+            ImmutableSet.Builder<T> builder = ImmutableSet.builder();
+
+            while (rset.next()) {
+                T instance = meta.map(values);
+                builder.add(instance);
+            }
+
+            return builder.build();
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
+    }
+
     @Override
     public <T> T findOne(Ref<T> ref) {
         SqlQuery query = dialect.read(checkNotNull(ref));
@@ -102,25 +119,14 @@ public final class JdbcDatabase extends Database {
     public <T> Set<T> all(Class<T> target) {
         Metadata<T> meta = metadataOf(target);
         SqlQuery query = dialect.read(meta);
+        return mapMany(meta, query);
+    }
 
-        try (ResultSet rset = query.query(connection)) {
-            // TODO compat with sqlite JDBC driver
-            //if (!rset.isAfterLast()) {
-            //    throw new DatabaseException.NotFound("can't find any data");
-            //}
-
-            NamedValues values = NamedValues.of(rset);
-            ImmutableSet.Builder<T> builder = ImmutableSet.builder();
-
-            while (rset.next()) {
-                T instance = meta.map(values);
-                builder.add(instance);
-            }
-
-            return builder.build();
-        } catch (SQLException e) {
-            throw propagate(e);
-        }
+    @Override
+    public <T> Set<T> find(Class<T> target, CriteriaInterface criteria) {
+        Metadata<T> meta = metadataOf(target);
+        SqlQuery query = dialect.read(meta, checkNotNull(criteria));
+        return mapMany(meta, query);
     }
 
     @Override

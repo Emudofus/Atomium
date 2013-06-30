@@ -2,6 +2,8 @@ package org.atomium;
 
 import org.atomium.annotations.Column;
 import org.atomium.annotations.PrimaryKey;
+import org.atomium.criterias.CriteriaInterface;
+import org.atomium.criterias.Criterias;
 import org.atomium.dialects.SqlDialects;
 import org.atomium.metadata.SimpleMetadataRegistry;
 import org.junit.*;
@@ -122,6 +124,29 @@ public class JdbcDatabaseTest {
         }
         assertTrue(first);
         assertTrue(second);
+    }
+
+    @Test
+    public void testFind() throws Exception {
+        CriteriaInterface criteria = Criterias.equal(Criterias.identifier("attr"), Criterias.value("hello_world"));
+        Set<MyEntity> instances = db.find(MyEntity.class, criteria);
+
+        assertThat(instances.size(), is(1));
+
+        MyEntity instance = instances.iterator().next(); // get first
+        assertThat(instance.getId(), is(1));
+        assertThat(instance.getAttr(), is("hello_world"));
+    }
+
+    @Test
+    public void testFindColumn() throws Exception {
+        Set<MyEntity> instances = db.find(MyEntity.class, "attr", "hello_world");
+
+        assertThat(instances.size(), is(1));
+
+        MyEntity instance = instances.iterator().next();
+        assertThat(instance.getId(), is(1));
+        assertThat(instance.getAttr(), is("hello_world"));
     }
 
     @Test
