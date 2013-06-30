@@ -1,5 +1,6 @@
 package org.atomium;
 
+import org.atomium.criterias.CriteriaInterface;
 import org.atomium.metadata.Metadata;
 
 /**
@@ -38,6 +39,16 @@ public interface DialectInterface {
      * @return created query
      */
     <T> QueryInterface read(Metadata<T> meta);
+
+    /**
+     * create a "read" query that will fetch data from the database according to the given criteria
+     * if {@code criteria} is null, this method is equivalent to {@link #read(org.atomium.metadata.Metadata)}
+     * @param meta entity's metadata
+     * @param criteria the nullable criteria
+     * @param <T> entity's type
+     * @return created query
+     */
+    <T> QueryInterface read(Metadata<T> meta, CriteriaInterface criteria);
 
     /**
      * create a "read" query that will fetch a single row from the database

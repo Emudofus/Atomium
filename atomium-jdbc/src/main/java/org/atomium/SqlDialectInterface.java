@@ -1,5 +1,6 @@
 package org.atomium;
 
+import org.atomium.criterias.CriteriaInterface;
 import org.atomium.metadata.Metadata;
 
 /**
@@ -25,6 +26,11 @@ public interface SqlDialectInterface extends DialectInterface {
      * {@inheritDoc}
      */
     <T> SqlQuery read(Metadata<T> meta);
+
+    /**
+     * {@inheritDoc}
+     */
+    <T> SqlQuery read(Metadata<T> meta, CriteriaInterface criteria);
 
     /**
      * {@inheritDoc}
