@@ -28,6 +28,7 @@ public final class ConverterMatchers {
         return AnnotationConverterMatcher.create(ImmutableSet.copyOf(annotationClasses));
     }
 
+    @SafeVarargs
     public static ConverterMatcher withAnnotations(Class<? extends Annotation>... annotationClasses) {
         return withAnnotations(asList(annotationClasses));
     }
