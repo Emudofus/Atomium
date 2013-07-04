@@ -2,8 +2,6 @@ package org.atomium.dialects;
 
 import org.atomium.JdbcDatabaseMetadata;
 import org.atomium.SqlDialectInterface;
-import org.atomium.dialects.DefaultSqlDialect;
-import org.atomium.dialects.HsqldbDialect;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;

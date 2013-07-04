@@ -1,5 +1,10 @@
-package org.atomium;
+package org.atomium.dialects;
 
+import com.googlecode.cqengine.attribute.Attribute;
+import com.googlecode.cqengine.query.Query;
+import org.atomium.JdbcDatabaseMetadata;
+import org.atomium.Ref;
+import org.atomium.SqlQuery;
 import org.atomium.annotations.Column;
 import org.atomium.annotations.PrimaryKey;
 import org.atomium.dialects.DefaultSqlDialect;
@@ -13,6 +18,7 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import static com.googlecode.cqengine.query.QueryFactory.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -94,6 +100,19 @@ public class DefaultSqlDialectTest {
     public void testRead() throws Exception {
         SqlQuery query = dialect.read(myEntity);
         assertThat(query.getCommand(), is("SELECT `id`, `attr` FROM `myEntity`;"));
+        assertThat(query.getBoundValues().length(), is(0));
+    }
+
+    @Test
+    public void testReadQuery() throws Exception {
+        Attribute<MyEntity, Comparable> id = myEntity.getPrimaryKey().asAttribute();
+        Attribute<MyEntity, CharSequence> attr = myEntity.getColumn("attr").asAttribute();
+
+        Query<MyEntity> q = and(greaterThan(id, 1000), startsWith(attr, "LEL"));
+
+        SqlQuery query = dialect.read(myEntity, q);
+
+        assertThat(query.getCommand(), is("SELECT `id`, `attr` FROM `myEntity` WHERE `id` > 1000 AND `attr` LIKE 'LEL%';"));
         assertThat(query.getBoundValues().length(), is(0));
     }
 

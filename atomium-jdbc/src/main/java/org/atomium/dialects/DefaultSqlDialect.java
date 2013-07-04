@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.googlecode.cqengine.query.Query;
 import org.atomium.*;
+import org.atomium.dialects.printers.DefaultQueryPrinter;
+import org.atomium.QueryPrinter;
 import org.atomium.metadata.ColumnInfo;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.ConverterInterface;
@@ -57,6 +59,10 @@ public class DefaultSqlDialect implements SqlDialectInterface {
     protected String escape(String identifier) {
         if (useTicks()) return TICK + identifier + TICK;
         return identifier;
+    }
+
+    protected <T> QueryPrinter<T> printer() {
+        return new DefaultQueryPrinter<>();
     }
 
     <T> String columnStructure(Set<ColumnMetadata<T>> columns) {
@@ -140,6 +146,11 @@ public class DefaultSqlDialect implements SqlDialectInterface {
         return builder.toString();
     }
 
+    <T> String printQuery(Query<T> query) {
+        QueryPrinter<T> printer = printer();
+        return printer.print(query);
+    }
+
     @Override
     public <T> SqlQuery buildStructure(Metadata<T> meta) {
         return SqlQuery.create("CREATE TABLE %s(%s);",
@@ -171,8 +182,12 @@ public class DefaultSqlDialect implements SqlDialectInterface {
     }
 
     @Override
-    public <T> SqlQuery read(Metadata<T> meta, Query<T> criteria) {
-        return null;
+    public <T> SqlQuery read(Metadata<T> meta, Query<T> query) {
+        return SqlQuery.create("SELECT %s FROM %s WHERE %s;",
+                columnList(meta.getColumns()),
+                escape(meta.getTableName()),
+                printQuery(query)
+        );
     }
 
     @Override
