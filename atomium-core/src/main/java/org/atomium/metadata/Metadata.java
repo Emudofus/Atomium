@@ -2,7 +2,8 @@ package org.atomium.metadata;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import org.atomium.*;
+import org.atomium.CacheType;
+import org.atomium.NamedValues;
 import org.atomium.annotations.Column;
 import org.atomium.annotations.Table;
 
@@ -10,6 +11,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,7 @@ public class Metadata<T> {
     private boolean loaded;
     private String tableName;
     private ColumnMetadata<T> primaryKey;
+    private CacheType cacheType;
 
     public Metadata(MetadataRegistry registry, Class<T> target) {
         this.registry = registry;
@@ -65,6 +68,13 @@ public class Metadata<T> {
     }
 
     /**
+     * @see Class#getAnnotation(Class)
+     */
+    public <T extends Annotation> T getAnnotation(Class<T> clazz) {
+        return target.getAnnotation(clazz);
+    }
+
+    /**
      * dome some back-end operations
      */
     public void load() {
@@ -85,6 +95,7 @@ public class Metadata<T> {
         } else {
             tableName = UPPER_CAMEL.to(LOWER_CAMEL, target.getSimpleName());
         }
+        cacheType = table.cache();
     }
 
     private void loadColumns() {
@@ -154,6 +165,14 @@ public class Metadata<T> {
      */
     public String getTableName() {
         return tableName;
+    }
+
+    /**
+     * get the cache's type of this metadata
+     * @return the non-null cache type
+     */
+    public CacheType getCacheType() {
+        return cacheType;
     }
 
     /**
