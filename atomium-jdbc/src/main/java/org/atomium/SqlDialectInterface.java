@@ -1,6 +1,6 @@
 package org.atomium;
 
-import org.atomium.criterias.CriteriaInterface;
+import com.googlecode.cqengine.query.Query;
 import org.atomium.metadata.Metadata;
 
 /**
@@ -30,7 +30,7 @@ public interface SqlDialectInterface extends DialectInterface {
     /**
      * {@inheritDoc}
      */
-    <T> SqlQuery read(Metadata<T> meta, CriteriaInterface criteria);
+    <T> SqlQuery read(Metadata<T> meta, Query<T> criteria);
 
     /**
      * {@inheritDoc}

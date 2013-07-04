@@ -1,8 +1,6 @@
 package org.atomium;
 
 import com.google.common.collect.Maps;
-import org.atomium.criterias.CriteriaInterface;
-import org.atomium.criterias.Criterias;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.Metadata;
 import org.atomium.metadata.MetadataRegistry;
@@ -47,13 +45,6 @@ public abstract class Database implements DatabaseInterface {
         Metadata<T> meta = registry.get(instance);
         checkArgument(meta != null, "%s must be registered", instance.getClass());
         return meta;
-    }
-
-    protected <T> CriteriaInterface createCriteria(ColumnMetadata<T> column, Object value) {
-        CriteriaInterface left = Criterias.identifier(column.getName()),
-                          right = Criterias.value(value);
-
-        return Criterias.equal(left, right);
     }
 
     @Override

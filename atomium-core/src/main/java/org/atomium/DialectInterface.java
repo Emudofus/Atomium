@@ -1,6 +1,6 @@
 package org.atomium;
 
-import org.atomium.criterias.CriteriaInterface;
+import com.googlecode.cqengine.query.Query;
 import org.atomium.metadata.Metadata;
 
 /**
@@ -48,7 +48,7 @@ public interface DialectInterface {
      * @param <T> entity's type
      * @return created query
      */
-    <T> QueryInterface read(Metadata<T> meta, CriteriaInterface criteria);
+    <T> QueryInterface read(Metadata<T> meta, Query<T> criteria);
 
     /**
      * create a "read" query that will fetch a single row from the database
