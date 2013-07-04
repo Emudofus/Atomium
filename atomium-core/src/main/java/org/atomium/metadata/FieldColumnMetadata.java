@@ -15,7 +15,7 @@ public class FieldColumnMetadata<T> extends ColumnMetadata<T> {
     private final Field field;
 
     public FieldColumnMetadata(Metadata<T> parent, String name, Field field) {
-        super(parent, name);
+        super(parent, name, TypeToken.of(field.getGenericType()));
         this.field = checkNotNull(field, "field");
         this.field.setAccessible(true);
     }
@@ -41,11 +41,6 @@ public class FieldColumnMetadata<T> extends ColumnMetadata<T> {
     @Override
     public <T1 extends Annotation> T1 getAnnotation(Class<T1> clazz) {
         return field.getAnnotation(clazz);
-    }
-
-    @Override
-    public TypeToken<?> getTarget() {
-        return TypeToken.of(field.getGenericType());
     }
 
     @Override

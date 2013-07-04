@@ -16,7 +16,7 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
     private final Method getter, setter;
 
     public PropertyColumnMetadata(Metadata<T> parent, String name, Method getter, Method setter) {
-        super(parent, name);
+        super(parent, name, TypeToken.of(getter.getGenericReturnType()));
         this.getter = checkNotNull(getter, "getter");
         this.setter = checkNotNull(setter, "setter");
     }
@@ -46,11 +46,6 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
     @Override
     public <T1 extends Annotation> T1 getAnnotation(Class<T1> clazz) {
         return getter.getAnnotation(clazz);
-    }
-
-    @Override
-    public TypeToken<?> getTarget() {
-        return TypeToken.of(getter.getGenericReturnType());
     }
 
     @Override
