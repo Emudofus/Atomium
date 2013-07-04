@@ -1,5 +1,6 @@
 package org.atomium.metadata;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -54,6 +55,11 @@ public class SimpleMetadataRegistry extends MetadataRegistry {
     @Override
     public <T> Metadata<T> get(T instance) {
         return (Metadata<T>) metas.get(instance.getClass());
+    }
+
+    @Override
+    public Set<Metadata<?>> getRegisteredMetadata() {
+        return ImmutableSet.copyOf(metas.values());
     }
 
     @Override

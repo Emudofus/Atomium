@@ -1,5 +1,7 @@
 package org.atomium.metadata;
 
+import java.util.Set;
+
 /**
  * @author Blackrush
  */
@@ -40,6 +42,12 @@ public abstract class MetadataRegistry {
      * @return the metadata or null if no metadata for that class is registered
      */
     public abstract <T> Metadata<T> get(T instance);
+
+    /**
+     * get the set of all registered {@link Metadata}
+     * @return a non-null set
+     */
+    public abstract Set<Metadata<?>> getRegisteredMetadata();
 
     /**
      * add a {@link InstantiationListener} to this registry that will listen all entity instantation

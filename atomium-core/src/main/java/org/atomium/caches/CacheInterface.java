@@ -5,6 +5,7 @@ import org.atomium.Ref;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.Metadata;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -14,6 +15,7 @@ public interface CacheInterface<T> {
     Metadata<T> getTarget();
 
     void put(T instance);
+    void put(Collection<T> instances);
 
     T unique(String columnName, Object value);
     T unique(ColumnMetadata<T> column, Object value);

@@ -10,6 +10,7 @@ import org.atomium.Ref;
 import org.atomium.metadata.ColumnMetadata;
 import org.atomium.metadata.Metadata;
 
+import java.util.Collection;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,6 +40,11 @@ public class CQCache<T> implements CacheInterface<T> {
     @Override
     public void put(T instance) {
         list.add(instance);
+    }
+
+    @Override
+    public void put(Collection<T> instances) {
+        list.addAll(instances);
     }
 
     @Override
