@@ -8,7 +8,6 @@ import org.atomium.metadata.Metadata;
 import org.atomium.metadata.MetadataRegistry;
 
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -73,25 +72,5 @@ public abstract class Database implements DatabaseInterface {
     @Override
     public MetadataRegistry getRegistry() {
         return registry;
-    }
-
-    @Override
-    public <T> T findOne(Class<T> target, Object identifier) {
-        return findOne(ref(target, identifier));
-    }
-
-    @Override
-    public <T> T findOne(Class<T> target, String column, Object value) {
-        return findOne(ref(target, column, value));
-    }
-
-    @Override
-    public <T> Set<T> find(Class<T> target, String columnName, Object columnValue) {
-        ColumnMetadata<T> column = metadataOf(target).getColumn(columnName);
-        checkArgument(column != null, "unknown column %s on %s", columnName, target.getName());
-
-        CriteriaInterface criteria = createCriteria(column, columnValue);
-
-        return find(target, criteria);
     }
 }
