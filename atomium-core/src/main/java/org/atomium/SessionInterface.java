@@ -24,8 +24,10 @@ public interface SessionInterface extends AutoCloseable {
     <T> T findOne(ColumnMetadata<T> column, Object value);
     <T> T findOne(Ref<T> ref);
 
-    <T> Set<T> find(Query<T> query);
-    <T> Set<T> all();
+    <T> Set<T> find(Class<T> target, Query<T> query);
+    <T> Set<T> find(Metadata<T> target, Query<T> query);
+    <T> Set<T> all(Class<T> target);
+    <T> Set<T> all(Metadata<T> target);
 
     <T> void persist(T instance);
 
