@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 
 /**
@@ -16,8 +17,8 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
 
     public PropertyColumnMetadata(Metadata<T> parent, String name, Method getter, Method setter) {
         super(parent, name);
-        this.getter = getter;
-        this.setter = setter;
+        this.getter = checkNotNull(getter, "getter");
+        this.setter = checkNotNull(setter, "setter");
     }
 
     @Override
@@ -50,5 +51,25 @@ public class PropertyColumnMetadata<T> extends ColumnMetadata<T> {
     @Override
     public TypeToken<?> getTarget() {
         return TypeToken.of(getter.getGenericReturnType());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PropertyColumnMetadata that = (PropertyColumnMetadata) o;
+
+        if (!getter.equals(that.getter)) return false;
+        if (!setter.equals(that.setter)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getter.hashCode();
+        result = 31 * result + setter.hashCode();
+        return result;
     }
 }

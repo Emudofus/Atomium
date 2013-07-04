@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 
 /**
@@ -15,7 +16,7 @@ public class FieldColumnMetadata<T> extends ColumnMetadata<T> {
 
     public FieldColumnMetadata(Metadata<T> parent, String name, Field field) {
         super(parent, name);
-        this.field = field;
+        this.field = checkNotNull(field, "field");
         this.field.setAccessible(true);
     }
 
@@ -45,5 +46,22 @@ public class FieldColumnMetadata<T> extends ColumnMetadata<T> {
     @Override
     public TypeToken<?> getTarget() {
         return TypeToken.of(field.getGenericType());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FieldColumnMetadata that = (FieldColumnMetadata) o;
+
+        if (!field.equals(that.field)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return field.hashCode();
     }
 }

@@ -232,4 +232,28 @@ public class Metadata<T> {
         Object pkey = primaryKey.get(instance);
         return pkey != null && !pkey.equals(0);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Metadata metadata = (Metadata) o;
+
+        if (columns != null ? !columns.equals(metadata.columns) : metadata.columns != null) return false;
+        if (primaryKey != null ? !primaryKey.equals(metadata.primaryKey) : metadata.primaryKey != null) return false;
+        if (tableName != null ? !tableName.equals(metadata.tableName) : metadata.tableName != null) return false;
+        if (target != null ? !target.equals(metadata.target) : metadata.target != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = target != null ? target.hashCode() : 0;
+        result = 31 * result + (columns != null ? columns.hashCode() : 0);
+        result = 31 * result + (tableName != null ? tableName.hashCode() : 0);
+        result = 31 * result + (primaryKey != null ? primaryKey.hashCode() : 0);
+        return result;
+    }
 }
