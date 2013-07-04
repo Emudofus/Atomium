@@ -92,10 +92,11 @@ public class Metadata<T> {
         Table table = target.getAnnotation(Table.class);
         if (table != null && !table.value().equals(Table.DEFAULT)) {
             tableName = table.value();
+            cacheType = table.cache();
         } else {
             tableName = UPPER_CAMEL.to(LOWER_CAMEL, target.getSimpleName());
+            cacheType = CacheType.NONE;
         }
-        cacheType = table.cache();
     }
 
     private void loadColumns() {
