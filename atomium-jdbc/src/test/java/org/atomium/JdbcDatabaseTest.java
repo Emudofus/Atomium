@@ -1,5 +1,6 @@
 package org.atomium;
 
+import com.google.common.base.Suppliers;
 import org.atomium.annotations.Column;
 import org.atomium.annotations.PrimaryKey;
 import org.atomium.dialects.SqlDialects;
@@ -34,7 +35,7 @@ public class JdbcDatabaseTest {
     @Before
     public void setUp() throws Exception {
         db = JdbcDatabase.of(
-                connection,
+                Suppliers.ofInstance(connection),
                 SqlDialects.forDatabaseMetaData(connection.getMetaData()),
                 new SimpleMetadataRegistry()
         );

@@ -1,5 +1,7 @@
 package org.atomium;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
 import org.atomium.converters.JodaConverter;
 import org.atomium.dialects.SqlDialects;
 import org.atomium.metadata.MetadataRegistry;
@@ -7,6 +9,7 @@ import org.atomium.metadata.MetadataRegistry;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
@@ -16,15 +19,8 @@ import static com.google.common.base.Throwables.propagate;
  */
 public final class JdbcDatabase extends Database {
     public static final DatabaseProvider PROVIDER = new DatabaseProvider() {
-        public DatabaseInterface get(String url, String user, String password, MetadataRegistry registry) {
-            try {
-                Connection connection = DriverManager.getConnection(url, user, password);
-                SqlDialectInterface dialect = SqlDialects.forDatabaseMetaData(connection.getMetaData());
-
-                return of(connection, dialect, registry);
-            } catch (SQLException e) {
-                throw propagate(e);
-            }
+        public DatabaseInterface get(final String url, final String user, final String password, MetadataRegistry registry) {
+            return of(url, user, password, registry);
         }
     };
 
@@ -32,17 +28,36 @@ public final class JdbcDatabase extends Database {
         Database.register("^jdbc:.+", PROVIDER);
     }
 
-    private final Connection connection;
+    private final Supplier<Connection> connection;
     private final SqlDialectInterface dialect;
+    private final List<JdbcSession> sessions = Lists.newArrayList();
 
-    private JdbcDatabase(Connection connection, SqlDialectInterface dialect, MetadataRegistry registry) {
+    private JdbcDatabase(Supplier<Connection> connection, SqlDialectInterface dialect, MetadataRegistry registry) {
         super(registry);
         this.connection = checkNotNull(connection);
         this.dialect = checkNotNull(dialect);
     }
 
-    public static JdbcDatabase of(Connection connection, SqlDialectInterface dialect, MetadataRegistry registry) {
+    public static JdbcDatabase of(Supplier<Connection> connection, SqlDialectInterface dialect, MetadataRegistry registry) {
         return new JdbcDatabase(connection, dialect, registry);
+    }
+
+    public static JdbcDatabase of(final String url, final String user, final String password, MetadataRegistry registry) {
+        Supplier<Connection> supplier = new Supplier<Connection>() {
+            public Connection get() {
+                try {
+                    return DriverManager.getConnection(url, user, password);
+                } catch (SQLException e) {
+                    throw propagate(e);
+                }
+            }
+        };
+
+        try (Connection con = supplier.get()) {
+            return of(supplier, SqlDialects.forDatabaseMetaData(con.getMetaData()), registry);
+        } catch (SQLException e) {
+            throw propagate(e);
+        }
     }
 
     @Override
@@ -52,10 +67,8 @@ public final class JdbcDatabase extends Database {
 
     @Override
     public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw propagate(e);
+        for (int i = 0; i < sessions.size(); i++) {
+            sessions.remove(0).close();
         }
     }
 
@@ -65,7 +78,17 @@ public final class JdbcDatabase extends Database {
     }
 
     @Override
-    public SessionInterface createSession() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public JdbcSession createSession() {
+        JdbcSession session = new JdbcSession(this, connection.get());
+        sessions.add(session);
+        return session;
+    }
+
+    void onClosed(JdbcSession session) {
+        sessions.remove(session);
+    }
+
+    Supplier<Connection> getConnection() {
+        return connection;
     }
 }
