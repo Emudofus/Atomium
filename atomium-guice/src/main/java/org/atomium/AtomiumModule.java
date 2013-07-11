@@ -5,6 +5,7 @@ import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import org.atomium.annotations.Table;
 import org.atomium.metadata.InstantiationListener;
 import org.atomium.metadata.Metadata;
@@ -62,5 +63,10 @@ public abstract class AtomiumModule extends AbstractModule {
     @Inject
     public final void triggerRegistryInjection(Injector injector, MetadataRegistry registry) {
         onRegistryInjection(injector, registry);
+    }
+
+    @Provides
+    SessionInterface provideSession(DatabaseInterface db) {
+        return db.createSession();
     }
 }
