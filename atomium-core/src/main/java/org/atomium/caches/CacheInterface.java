@@ -22,4 +22,6 @@ public interface CacheInterface<T> {
     T unique(Ref<T> ref);
 
     Set<T> where(Query<T> query);
+
+    Set<T> all();
 }

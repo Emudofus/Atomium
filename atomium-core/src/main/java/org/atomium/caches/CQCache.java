@@ -68,4 +68,9 @@ public class CQCache<T> implements CacheInterface<T> {
     public Set<T> where(Query<T> query) {
         return ImmutableSet.copyOf(list.retrieve(query));
     }
+
+    @Override
+    public Set<T> all() {
+        return ImmutableSet.copyOf(list);
+    }
 }

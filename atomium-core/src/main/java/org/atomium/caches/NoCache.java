@@ -53,4 +53,9 @@ public class NoCache<T> implements CacheInterface<T> {
     public Set<T> where(Query<T> query) {
         return ImmutableSet.of();
     }
+
+    @Override
+    public Set<T> all() {
+        return ImmutableSet.of();
+    }
 }
