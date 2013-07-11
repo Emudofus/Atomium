@@ -32,6 +32,15 @@ public final class JdbcSession extends Session {
         return connection;
     }
 
+    void load() {
+        for (Metadata<?> metadata : getDatabase().getRegistry().getRegisteredMetadata()) {
+            load(metadata);
+        }
+    }
+
+    private <T> void load(Metadata<T> meta) {
+    }
+
     @Override
     protected <T> CacheInterface<T> createCache(Metadata<T> metadata) {
         switch (metadata.getCacheType()) {

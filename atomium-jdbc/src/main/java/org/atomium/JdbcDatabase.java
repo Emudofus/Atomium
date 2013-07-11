@@ -81,6 +81,7 @@ public final class JdbcDatabase extends Database {
     public JdbcSession createSession() {
         JdbcSession session = new JdbcSession(this, connection.get());
         sessions.add(session);
+        session.load();
         return session;
     }
 
